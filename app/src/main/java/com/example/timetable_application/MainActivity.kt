@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import com.example.timetable_application.ui.MyApp
 import com.example.timetable_application.entity.TimetableViewModel
 import com.example.timetable_application.entity.TimetableViewModelFactory

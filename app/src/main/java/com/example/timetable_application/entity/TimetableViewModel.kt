@@ -6,6 +6,7 @@ import androidx.lifecycle.*
 import androidx.room.Room
 import com.example.timetable_application.db.TimetableDatabase
 import kotlinx.coroutines.launch
+import java.sql.Time
 
 class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
     //创建数据库
@@ -37,13 +38,21 @@ class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
     private val _courseMap = MutableLiveData<MutableMap<String, Course>>()
     val courseMap: LiveData<MutableMap<String, Course>>
         get() = _courseMap
+    private val _timetableList = MutableLiveData< List<Timetable> >()
+    val timetableList: LiveData< List<Timetable> >
+        get() = _timetableList
 
     init {
         viewModelScope.launch {
             changeTimetable()
         }
     }
-
+    //获取所有课表
+    fun getTimetableList() {
+        viewModelScope.launch {
+            _timetableList.value = timetableRepository.getAllTimetable()
+        }
+    }
     //设置默认课表
     fun setDefaultTimetable(name: String){
         viewModelScope.launch {
@@ -58,6 +67,7 @@ class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
     fun addTimetable(timetable: Timetable){
         viewModelScope.launch {
             timetableRepository.addTimetable(timetable)
+            getTimetableList()
         }
     }
     //改变当前的timetable,name为“”则为默认课表
@@ -71,12 +81,14 @@ class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
             _coursesPerDay.value = timetable.coursesPerDay
             _weeksOfTerm.value = timetable.weeksOfTerm
             _courseMap.value = timetable.courseMap
+            _timetableList.value = timetableRepository.getAllTimetable()
         }
     }
     //删除课表
     fun deleteTimetable(name:String){
         viewModelScope.launch {
             timetableRepository.deleteTimetable(name)
+            getTimetableList()
         }
     }
     //课表属性修改
@@ -108,6 +120,10 @@ class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             _weeksOfTerm.value = weeksOfTerm
             timetableRepository.editWeeksOfTerm(_timetableName.value!!,weeksOfTerm)
+            if (_curWeek.value!! >weeksOfTerm){
+                _curWeek.value = weeksOfTerm
+                timetableRepository.editCurWeek(_timetableName.value!!,weeksOfTerm)
+            }
         }
     }
     //课程修改

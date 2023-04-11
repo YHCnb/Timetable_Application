@@ -19,7 +19,7 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimetableTopAppBar(navController: NavController,courseMap:MutableMap<String, Course>) {
+fun TimetableTopAppBar(navController: NavController,courseMap:MutableMap<String, Course>,onCallSettings:()->Unit) {
     TopAppBar(
         title = {
             TimeColumn()
@@ -40,7 +40,7 @@ fun TimetableTopAppBar(navController: NavController,courseMap:MutableMap<String,
                 Icon(imageVector  = Icons.Default.Add,contentDescription = null)
             }
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = { onCallSettings() },
                 // Use IconButtonColors function to create a material3 style
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = MaterialTheme.colorScheme.primary,

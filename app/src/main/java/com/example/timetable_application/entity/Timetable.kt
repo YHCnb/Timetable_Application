@@ -3,6 +3,7 @@ package com.example.timetable_application.entity
 import android.os.Parcelable
 import androidx.compose.ui.graphics.Color
 import androidx.room.*
+import com.google.android.gms.common.util.CollectionUtils.listOf
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import kotlinx.parcelize.Parcelize

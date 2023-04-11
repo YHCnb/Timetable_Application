@@ -1,4 +1,4 @@
-package com.example.timetable_application.ui.screen.timetable.courseEditorScreen.pickers
+package com.example.timetable_application.ui.screen.timetable.pickers
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.substring
 import androidx.compose.ui.unit.dp
 import com.github.skydoves.colorpicker.compose.*
 
@@ -32,7 +33,7 @@ fun ColorPicker(
         Icon(
             imageVector = Icons.Default.Add,
             contentDescription = null,
-            tint = Color(java.lang.Long.parseLong("FF$selectedColor", 16)),
+            tint = Color(java.lang.Long.parseLong("FF$initialColor", 16)),
             modifier = Modifier.size(32.dp)
         )
         Column(
@@ -42,7 +43,7 @@ fun ColorPicker(
         ) {
             Text(
                 text = "点此更改颜色",
-                color = Color(java.lang.Long.parseLong("FF$selectedColor", 16)),
+                color = Color(java.lang.Long.parseLong("FF$initialColor", 16)),
                 style = MaterialTheme.typography.bodyMedium
             )
         }

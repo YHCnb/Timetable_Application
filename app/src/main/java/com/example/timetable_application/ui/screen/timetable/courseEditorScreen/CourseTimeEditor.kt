@@ -15,9 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.timetable_application.entity.CourseTime
-import com.example.timetable_application.ui.screen.timetable.courseEditorScreen.pickers.CourseTimePicker
-import com.example.timetable_application.ui.screen.timetable.courseEditorScreen.pickers.TextPicker
-import com.example.timetable_application.ui.screen.timetable.courseEditorScreen.pickers.WeeksPicker
+import com.example.timetable_application.ui.screen.timetable.pickers.CourseTimePicker
+import com.example.timetable_application.ui.screen.timetable.pickers.TextPicker
+import com.example.timetable_application.ui.screen.timetable.pickers.WeeksPicker
 
 @Composable
 fun CourseTimeEditor(time: CourseTime, weeksOfTerm:Int, coursesPerDay:Int, onTimeChanged: (CourseTime) -> Unit, onDeleteTime: () -> Unit) {

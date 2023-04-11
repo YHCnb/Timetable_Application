@@ -41,7 +41,7 @@ fun CourseManagement(navController: NavController,vm: TimetableViewModel){
         Scaffold(
             // 定义头部
             topBar = {
-                ManagementTopAppBar(){
+                CourseManagementTopAppBar(){
                     navController.popBackStack()
                 }
             },
@@ -78,7 +78,7 @@ fun CourseManagement(navController: NavController,vm: TimetableViewModel){
         }
     }
 }
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CoursesCards(navController: NavController, courseMap: MutableCollection<Course>, onDelete: (String) -> Unit){
     val courseList = courseMap.toList()
@@ -120,7 +120,7 @@ fun CoursesCards(navController: NavController, courseMap: MutableCollection<Cour
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ManagementTopAppBar(onBackPressed: () -> Unit = {}) {
+fun CourseManagementTopAppBar(onBackPressed: () -> Unit = {}) {
     TopAppBar(title = { Text(text = "课程管理", fontWeight = FontWeight.ExtraBold) },
         navigationIcon = {
             IconButton(

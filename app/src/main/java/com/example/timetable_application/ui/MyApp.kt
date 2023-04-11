@@ -26,6 +26,8 @@ import com.example.timetable_application.ui.screen.timetable.courseEditorScreen.
 import com.example.timetable_application.ui.screen.timetable.CourseManagement
 import com.example.timetable_application.ui.screen.timetable.timetableScreen.TimetableScreen
 import com.example.timetable_application.entity.TimetableViewModel
+import com.example.timetable_application.ui.screen.timetable.TimeTableManagement
+import com.google.android.gms.common.util.CollectionUtils.listOf
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,17 +66,20 @@ fun Navigation(navController: NavHostController, scrollState: ScrollState,
         composable("Timetable") {
             TimetableScreen(navController = navController, vm = vm)
         }
+        composable("TimetableManagement") {
+            TimeTableManagement(navController = navController, vm = vm)
+        }
         composable(
             "CourseManagement/{timetableName}",
-            arguments = listOfNotNull(navArgument("timetableName"){//传入timetableName参数
+            arguments = listOf(navArgument("timetableName"){//传入timetableName参数
                 type = NavType.StringType
             })
         ){
-            it.arguments?.getString("timetableName")?.let { timetableName  ->
-                if(timetableName!=vm.timetableName.value){
-                    vm.changeTimetable(timetableName)//课表名不同，先改变课表，再导航
-                }
-                CourseManagement(navController = navController, vm = vm) }
+            val timetableName = it.arguments?.getString("timetableName")!!
+            if(timetableName!=vm.timetableName.value){
+                vm.changeTimetable(timetableName)//课表名不同，先改变课表，再导航
+            }
+            CourseManagement(navController = navController, vm = vm)
         }
         composable(
             "CourseEditor/{courseName}",
@@ -88,7 +93,7 @@ fun Navigation(navController: NavHostController, scrollState: ScrollState,
                     coursesPerDay = vm.coursesPerDay.value!!,course = DbHelper.creatExampleCourse())
             }else{
                 CourseEditor(navController = navController, weeksOfTerm = vm.weeksOfTerm.value!! ,
-                    coursesPerDay = vm.coursesPerDay.value!!,course = vm.courseMap.value!![courseName]!!)
+                    coursesPerDay = vm.coursesPerDay.value!!,course = vm.courseMap.value!![courseName.toString()]!!)
             }
         }
     }

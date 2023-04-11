@@ -1,4 +1,4 @@
-package com.example.timetable_application.ui.screen.timetable.courseEditorScreen.pickers
+package com.example.timetable_application.ui.screen.timetable.pickers
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

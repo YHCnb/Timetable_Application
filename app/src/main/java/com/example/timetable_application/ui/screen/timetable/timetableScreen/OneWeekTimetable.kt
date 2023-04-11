@@ -21,7 +21,7 @@ import java.time.LocalDate
 
 @Composable
 fun OneWeekTimetable(navController: NavController, courseMap:MutableMap<String, Course>,
-                     currentWeekDates:List<LocalDate>, weekDays:List<String>, currentWeek:Int){
+                     currentWeekDates:List<LocalDate>, weekDays:List<String>, currentWeek:Int,coursesPerDay:Int){
     val rowHeight = 30.dp//周一到周日的格子的高度
     val monthWidth = 40.dp//最左侧一栏的宽度
     Row(
@@ -77,7 +77,7 @@ fun OneWeekTimetable(navController: NavController, courseMap:MutableMap<String, 
             Column(
                 modifier = Modifier.fillMaxHeight()
             ) {
-                for (i in 1..20) {
+                for (i in 1..coursesPerDay) {
                     Text(
                         text = "$i",
                         textAlign = TextAlign.Center,

@@ -2,18 +2,24 @@ package com.example.timetable_application.ui.screen.timetable.timetableScreen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.DrawerValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.chargemap.compose.numberpicker.NumberPicker
 import com.example.timetable_application.entity.Course
 import com.example.timetable_application.entity.TimetableViewModel
+import com.example.timetable_application.ui.screen.timetable.CourseManagement
+import com.example.timetable_application.ui.screen.timetable.pickers.MyNumberPicker
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.google.android.gms.common.util.CollectionUtils.listOf
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.util.*
@@ -44,35 +50,122 @@ fun TimetableScreen(navController: NavController,vm: TimetableViewModel) {
     val currentWeek = rememberPagerState(initialPage = curWeek!!)
     val weekDays = listOf("一", "二", "三", "四", "五", "六", "日")
     val dates = generateWeekDates(startDate = LocalDate.parse(startTime), weeksOfTerm = weeksOfTerm!!)
+    //用于Drawer
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
-    Scaffold(
-        topBar = { TimetableTopAppBar(navController=navController,courseMap=courseMap!!) }
-    ) {
-        Column(
-            modifier = Modifier.padding(it)
-        ) {
-            HorizontalPager(
-                modifier = Modifier.fillMaxWidth(),
-                state = currentWeek,
-                count = weeksOfTerm!!
-            ) { page ->
-                OneWeekTimetable(
-                    navController = navController,
-                    courseMap = courseMap!!,
-                    currentWeekDates = dates[page],
-                    weekDays = weekDays,
-                    currentWeek = page+1
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                NavigationDrawerItem(
+                    label = {
+                        Text(text = "课表管理")
+                    },
+                    selected = false,
+                    onClick = {
+                        scope.launch {//点击即可关闭
+                            drawerState.close()
+                            navController.navigate("TimetableManagement")
+                        }
+                    }
+                )
+                NavigationDrawerItem(
+                    label = {
+                        Text(text = "课程管理")
+                    },
+                    selected = false,
+                    onClick = {
+                        scope.launch {//点击即可关闭
+                            drawerState.close()
+                            navController.navigate("CourseManagement/${timetableName}")
+                        }
+                    },
+                )
+                NavigationDrawerItem(
+                    label = {
+                        Text(text = "时间表")
+                    },
+                    selected = false,
+                    onClick = {
+                        scope.launch {//点击即可关闭
+                            drawerState.close()
+                        }
+                    }
+                )
+                MyNumberPicker(title = "设置节数", list = (1..20).toList(), initialIndex = coursesPerDay!!-1,
+                    onClose = {
+                        scope.launch {//点击即可关闭
+                            drawerState.close()
+                        }
+                    },
+                    onConfirm = { vm.editCoursesPerDay(it) },
+                    onDismiss = {
+                        scope.launch {//点击即可关闭
+                            drawerState.open()
+                        }
+                    }
+                )
+                MyNumberPicker(title = "设置当前周", list = (1..weeksOfTerm!!).toList(), initialIndex = curWeek!!-1,
+                    onClose = {
+                        scope.launch {//点击即可关闭
+                            drawerState.close()
+                        }
+                    },
+                    onConfirm = { vm.editCurWeek(it) },
+                    onDismiss = {
+                        scope.launch {//点击即可关闭
+                            drawerState.open()
+                        }
+                    }
+                )
+                MyNumberPicker(title = "设置学期周数", list = (1..25).toList(), initialIndex = weeksOfTerm!!-1,
+                    onClose = {
+                        scope.launch {//点击即可关闭
+                            drawerState.close()
+                        }
+                    },
+                    onConfirm = { vm.editWeeksOfTerm(it) },
+                    onDismiss = {
+                        scope.launch {//点击即可关闭
+                            drawerState.open()
+                        }
+                    }
                 )
             }
         }
+    ) {
+        Scaffold(
+            topBar = {
+                TimetableTopAppBar(navController=navController,courseMap=courseMap!!,
+                    onCallSettings = {
+                        scope.launch {
+                            drawerState.open()
+                        }
+                    }
+                )
+            }
+        ) {
+            Column(
+                modifier = Modifier.padding(it)
+            ) {
+                HorizontalPager(
+                    modifier = Modifier.fillMaxWidth(),
+                    state = currentWeek,
+                    count = weeksOfTerm!!
+                ) { page ->
+                    OneWeekTimetable(
+                        navController = navController,
+                        courseMap = courseMap!!,
+                        currentWeekDates = dates[page],
+                        weekDays = weekDays,
+                        currentWeek = page+1,
+                        coursesPerDay = coursesPerDay!!
+                    )
+                }
+            }
+        }
     }
-//    OutlinedButton(
-//        onClick = { navController.navigate(
-//            "CourseManagement/${timetableName}",
-//        ) },
-//    ) {
-//        Text(text = "go to 课程管理")
-//    }
 }
 // 生成一个月份及其对应的日期列表
 fun generateWeekDates(startDate:LocalDate ,weeksOfTerm:Int): List< List<LocalDate> > {

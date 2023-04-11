@@ -23,6 +23,5 @@ fun MainCompose(navController: NavController){
         }) {
             Text(text = "go to Another")
         }
-        SettingFloatingBox()
     }
 }

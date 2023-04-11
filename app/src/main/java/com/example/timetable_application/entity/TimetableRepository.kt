@@ -1,6 +1,7 @@
 package com.example.timetable_application.entity
 
 import com.example.timetable_application.db.TimetableDatabase
+import kotlinx.coroutines.flow.first
 
 // 定义一个接口，表示获取课表的功能
 interface TimetableRepository {
@@ -17,6 +18,10 @@ class DatabaseTimetableRepository(private val db: TimetableDatabase) {
         val defaultTimetableName = timetableDao.getSettingByName("default_timetable").value
         //返回默认课表
         return timetableDao.getTimetableByName(defaultTimetableName)
+    }
+    //获取所有课表
+    suspend fun getAllTimetable(): List<Timetable> {
+        return timetableDao.getAllTimetable().first()
     }
     //设置默认课表名
     suspend fun setDefaultTimetable(name: String) {
@@ -61,9 +66,9 @@ class DatabaseTimetableRepository(private val db: TimetableDatabase) {
         tb.coursesPerDay=coursesPerDay
         timetableDao.updateTimetable(tb)
     }
-    suspend fun editWeeksOfTerm(name:String,coursesPerDay:Int){
+    suspend fun editWeeksOfTerm(name:String,weeksOfTerm:Int){
         val tb = timetableDao.getTimetableByName(name)
-        tb.coursesPerDay=coursesPerDay
+        tb.weeksOfTerm=weeksOfTerm
         timetableDao.updateTimetable(tb)
     }
 

@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.timetable_application.entity.Course
 import com.example.timetable_application.entity.CourseTime
-import com.example.timetable_application.ui.screen.timetable.courseEditorScreen.pickers.ColorPicker
+import com.example.timetable_application.ui.screen.timetable.pickers.ColorPicker
 
 //需要同时完成两个目标，修改课程与增加课程
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,7 +41,7 @@ fun CourseEditor(navController: NavController,weeksOfTerm:Int,coursesPerDay:Int,
                 val courseList = navController.previousBackStackEntry?.savedStateHandle?.get<List<Course>>("courseList")
                 if(courseList!=null){
                     //创建newCourse
-                    val newCourse = Course(name = nameState,color = colorState, time = timesState.toMutableList())
+                    val newCourse = Course(name = nameState,color = colorState, time = timesState.toMutableStateList())
                     if(newCourse.name==""){
                         message = "课程名不能为空！"
                     }else if(newCourse.name!=course.name && courseList.any { it.name == newCourse.name }){
@@ -53,7 +53,6 @@ fun CourseEditor(navController: NavController,weeksOfTerm:Int,coursesPerDay:Int,
                             if(it.name!=course.name){
                                 it.time.forEach{ courseTime ->
                                     newCourse.time.forEach{newCourseTime->
-                                        println(newCourseTime.dayOfWeek)
                                         if(newCourseTime.dayOfWeek==courseTime.dayOfWeek){
                                             newCourseTime.timeOfCourse.forEach{nt->
                                                 if (courseTime.timeOfCourse.contains(nt)){
