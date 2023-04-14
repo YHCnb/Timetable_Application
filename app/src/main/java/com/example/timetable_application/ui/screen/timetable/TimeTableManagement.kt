@@ -1,5 +1,6 @@
 package com.example.timetable_application.ui.screen.timetable
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -15,9 +16,11 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.timetable_application.R
 import com.example.timetable_application.db.DbHelper
 import com.example.timetable_application.entity.Timetable
 import com.example.timetable_application.entity.TimetableViewModel
@@ -30,6 +33,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun TimeTableManagement(navController: NavController, vm: TimetableViewModel){
     val timetableList by vm.timetableList.observeAsState()
+    val defaultTimetableName by vm.defaultTimetableName.observeAsState()
+    
     var showTextDialog by remember { mutableStateOf(false) }
 
     var showAlertDialog by remember { mutableStateOf(false) }
@@ -43,7 +48,7 @@ fun TimeTableManagement(navController: NavController, vm: TimetableViewModel){
     Scaffold(
         // 定义头部
         topBar = {
-            CourseManagementTopAppBar(){
+            TimetableManagementTopAppBar(){
                 navController.popBackStack()
             }
         },
@@ -53,7 +58,7 @@ fun TimeTableManagement(navController: NavController, vm: TimetableViewModel){
                 onClick = {
                     showTextDialog=true
                 }){
-                Icon(Icons.Filled.Add, contentDescription = "Localized description")
+                Icon(Icons.Filled.Add, contentDescription = null)
             } } ,
 //        floatingActionButtonPosition = FabPosition.End,
     ) {paddingValues->
@@ -64,6 +69,7 @@ fun TimeTableManagement(navController: NavController, vm: TimetableViewModel){
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             item {
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = "点击查看课表课程，长按删除",
                     fontWeight = FontWeight.SemiBold,
@@ -74,8 +80,9 @@ fun TimeTableManagement(navController: NavController, vm: TimetableViewModel){
                 TimetableCards(
                     navController = navController,
                     timetableList = timetableList!!,
+                    defaultTimetableName = defaultTimetableName!!,
                     onDelete = {name->
-                        if (name==vm.timetableName.value){//当前课表无法删除
+                        if (name==defaultTimetableName){//当前课表无法删除
                             scope.launch {
                                 snackbarHostState.showSnackbar("默认课表无法删除")
                             }
@@ -86,7 +93,7 @@ fun TimeTableManagement(navController: NavController, vm: TimetableViewModel){
                             showAlertDialog=true
                         }
                     }){name->
-                    if (vm.timetableName.value!=name){
+                    if (defaultTimetableName!=name){
                         whichWork = 1
                         onChangeTimetableName=name
                         message = "确认要设置课表[${onChangeTimetableName}]为默认课表吗？"
@@ -133,12 +140,14 @@ fun TimeTableManagement(navController: NavController, vm: TimetableViewModel){
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TimetableCards(navController: NavController, timetableList: List<Timetable>, onDelete: (String) -> Unit,onSetDefault:(String)->Unit){
+fun TimetableCards(navController: NavController, timetableList: List<Timetable>, defaultTimetableName:String,
+                   onDelete: (String) -> Unit,onSetDefault:(String)->Unit){
+    
     Column() {
         timetableList.forEach{ timetable->
             Card(
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(12.dp)
                     .height(100.dp)
                     .fillMaxWidth()
                     .combinedClickable(
@@ -149,22 +158,28 @@ fun TimetableCards(navController: NavController, timetableList: List<Timetable>,
                         },
                         onLongClick = { onDelete(timetable.name) }
                     ),
+                border = BorderStroke(1.dp, Color.Black),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
             ) {
-                Column(
-
+                Text(
+                    text = timetable.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(16.dp)
+                )
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.BottomEnd
                 ) {
-                    Text(
-                        text = timetable.name,
-                        fontWeight = FontWeight.Normal,
-                        modifier = Modifier.padding(16.dp)
-                    )
                     Row(
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.Bottom,
                     ) {
-                        IconButton(onClick = { onSetDefault(timetable.name) }) {
-                            Icon(imageVector = Icons.Filled.Favorite, contentDescription="defaultTimetable")
+                        IconButton(
+                            onClick = { onSetDefault(timetable.name) },
+                        ) {
+                            if(defaultTimetableName==timetable.name){
+                                Icon(imageVector = Icons.Filled.Favorite, contentDescription="defaultTimetable")
+                            }else{
+                                Icon(painter = painterResource(id = R.drawable.like), contentDescription=null)
+                            }
                         }
                         IconButton(onClick = {  }) {
                             Icon(imageVector = Icons.Filled.Edit, contentDescription="editTimetable")

@@ -1,10 +1,7 @@
 package com.example.timetable_application.ui.screen.timetable.dialogs
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +23,11 @@ fun MyAlertDialog(
                 TextButton(
                     onClick = { onConfirm() }
                 ) {
-                    Text("确定")
+                    Text(
+                        text = "确定",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 }
             },
             dismissButton = {

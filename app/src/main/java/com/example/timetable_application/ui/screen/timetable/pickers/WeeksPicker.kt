@@ -12,7 +12,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.timetable_application.R
 
 @Composable
 fun WeeksPicker(
@@ -35,32 +37,31 @@ fun WeeksPicker(
     Box(
         Modifier
             .fillMaxWidth()
-            .height(64.dp)
             .clickable { showDialog.value = true }
-            .padding(16.dp)
+            .height(50.dp)
+            .padding(10.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.Done,
-            contentDescription = null,
-            tint = Color(0xFF5A5A5A),
-            modifier = Modifier.size(32.dp)
-        )
-        Column(
-            Modifier
-                .padding(start = 24.dp)
-                .align(Alignment.CenterStart)
+        Row(
+            Modifier.fillMaxHeight()
         ) {
+            Icon(
+                painter = painterResource(id = R.drawable.plan),
+                contentDescription = null,
+//                modifier = Modifier.fillMaxSize(),
+                tint = MaterialTheme.colorScheme.onSurface,
+            )
+            Spacer(modifier = Modifier.width(20.dp))
             Text(
                 text = weeksText.value,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                style = MaterialTheme.typography.bodyMedium
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.titleMedium
             )
         }
     }
     if(showDialog.value){
         AlertDialog(
             onDismissRequest = { showDialog.value = false },
-            title = { Text("Choose numbers") },
+            title = { Text("Choose weeks") },
             text = {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(5),
@@ -101,12 +102,18 @@ fun WeeksPicker(
                         showDialog.value = false
                     }
                 ) {
-                    Text("确定")
+                    Text(
+                        text = "确定",
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDialog.value = false }) {
-                    Text("取消")
+                    Text(
+                        text = "取消",
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 }
             },
         )

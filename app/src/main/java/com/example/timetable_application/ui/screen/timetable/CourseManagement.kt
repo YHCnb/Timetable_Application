@@ -1,5 +1,6 @@
 package com.example.timetable_application.ui.screen.timetable
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.timetable_application.entity.Course
@@ -62,6 +64,7 @@ fun CourseManagement(navController: NavController,vm: TimetableViewModel){
                     .padding(it),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = "轻触编辑，长按删除",
                     fontWeight = FontWeight.SemiBold,
@@ -93,7 +96,8 @@ fun CoursesCards(navController: NavController, courseMap: MutableCollection<Cour
                 Card(
                     modifier = Modifier
                         .padding(16.dp)
-                        .size(100.dp, 50.dp)
+                        .width(160.dp)
+                        .height(85.dp)
                         .combinedClickable(
                             enabled = true,
                             onClick = {
@@ -106,13 +110,25 @@ fun CoursesCards(navController: NavController, courseMap: MutableCollection<Cour
                             },
                             onLongClick = { onDelete(course.name) }
                         ),
+                    border = BorderStroke(1.dp, Color.Black),
                     colors = CardDefaults.cardColors(containerColor = Color(java.lang.Long.parseLong("FF${course.color}", 16)))
                 ) {
-                    Text(
-                        text = course.name,
-                        fontWeight = FontWeight.Normal,
-                        modifier = Modifier.padding(16.dp)
-                    )
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = course.name,
+                            fontWeight = FontWeight.Normal,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(20.dp),
+                        )
+                    }
+//                    Text(
+//                        text = course.name,
+//                        fontWeight = FontWeight.Normal,
+//                        modifier = Modifier.padding(20.dp),
+//                    )
                 }
             }
         }

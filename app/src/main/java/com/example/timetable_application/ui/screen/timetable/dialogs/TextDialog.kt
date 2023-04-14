@@ -29,12 +29,18 @@ fun TextDialog(
                         onClose()
                     }
                 ) {
-                    Text("确定")
+                    Text(
+                        text = "确定",
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 }
             },
             dismissButton = {
                 TextButton(onClick = { onClose() }) {
-                    Text("取消")
+                    Text(
+                        text = "取消",
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 }
             },
             modifier = Modifier.width(300.dp),
@@ -49,11 +55,16 @@ fun TextDialog(
                     ) {
                         Spacer(modifier = Modifier.height(8.dp))
                         TextField(
+                            textStyle = MaterialTheme.typography.titleMedium,
                             value = text,
                             onValueChange = {
                                 text = it
                             },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            colors= TextFieldDefaults.textFieldColors(
+                                textColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                                containerColor = MaterialTheme.colorScheme.inversePrimary
+                            )
                         )
                     }
                 }

@@ -7,14 +7,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.timetable_application.R
 import com.example.timetable_application.ui.screen.timetable.dialogs.TextDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextPicker(
-    icon: ImageVector,
+    iconPainter: Painter,
     initialText:String,
     title:String,
     nullText:String,//text为空时显示的内容
@@ -26,25 +29,24 @@ fun TextPicker(
     Box(
         Modifier
             .fillMaxWidth()
-            .height(64.dp)
+            .height(50.dp)
             .clickable { showDialog.value = true }
-            .padding(16.dp)
+            .padding(10.dp)
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = Color(0xFF5A5A5A),
-            modifier = Modifier.size(32.dp)
-        )
-        Column(
-            Modifier
-                .padding(start = 24.dp)
-                .align(Alignment.CenterStart)
+        Row(
+            Modifier.fillMaxHeight()
         ) {
+            Icon(
+                painter = iconPainter,
+                contentDescription = null,
+//                modifier = Modifier.fillMaxSize(),
+                tint = MaterialTheme.colorScheme.onSurface,
+            )
+            Spacer(modifier = Modifier.width(20.dp))
             Text(
                 text = if(text=="") nullText else text,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                style = MaterialTheme.typography.bodyMedium
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.titleMedium
             )
         }
     }

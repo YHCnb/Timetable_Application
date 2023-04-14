@@ -1,7 +1,8 @@
-package com.example.timetable_application.ui.screen.timetable.courseEditorScreen
+package com.example.timetable_application.ui.screen.timetable.dialogs
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -17,7 +18,13 @@ fun SaveOrLeaveDialog(
     if (openDialog.value) {
         AlertDialog(
             onDismissRequest = { openDialog.value = false },
-            text = { Text("是否保存当前编辑？") },
+            text = {
+                Text(
+                    text = "是否保存当前编辑？",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            },
             confirmButton = {
                 Button(
                     onClick = {

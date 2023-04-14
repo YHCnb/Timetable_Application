@@ -11,7 +11,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.chargemap.compose.numberpicker.ListItemPicker
+import com.example.timetable_application.R
 
 @Composable
 fun CourseTimePicker(
@@ -22,6 +25,7 @@ fun CourseTimePicker(
     onTimeSelected: (dayOfWeek: Int, startPeriod: Int, endPeriod: Int) -> Unit,
 ) {
     val daysOfWeek = listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日")
+    val periodList = (1..coursesPerDay).toList()
     var selectedDay by remember { mutableStateOf(daysOfWeek[initialDayOfWeek]) }
     var selectedStart by remember { mutableStateOf(initialStartPeriod) }
     var selectedEnd by remember { mutableStateOf(initialEndPeriod) }
@@ -30,25 +34,24 @@ fun CourseTimePicker(
     Box(
         Modifier
             .fillMaxWidth()
-            .height(64.dp)
+            .height(50.dp)
             .clickable { showDialog.value = true }
-            .padding(16.dp)
+            .padding(10.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = null,
-            tint = Color(0xFF5A5A5A),
-            modifier = Modifier.size(32.dp)
-        )
-        Column(
-            Modifier
-                .padding(start = 24.dp)
-                .align(Alignment.CenterStart)
+        Row(
+            Modifier.fillMaxHeight()
         ) {
+            Icon(
+                painter = painterResource(id = R.drawable.time),
+                contentDescription = null,
+//                modifier = Modifier.fillMaxSize(),
+                tint = MaterialTheme.colorScheme.onSurface,
+            )
+            Spacer(modifier = Modifier.width(20.dp))
             Text(
-                text = "${daysOfWeek[initialDayOfWeek]}  第${selectedStart}-${selectedEnd}节",
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                style = MaterialTheme.typography.bodyMedium
+                text = "${daysOfWeek[initialDayOfWeek]}  第${initialStartPeriod}-${initialEndPeriod}节",
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.titleMedium
             )
         }
     }
@@ -67,7 +70,12 @@ fun CourseTimePicker(
     }
     if(showDialog.value){
         AlertDialog(
-            onDismissRequest = { showDialog.value = false },
+            onDismissRequest = {
+                showDialog.value = false
+                selectedDay = daysOfWeek[initialDayOfWeek]
+                selectedStart = initialStartPeriod
+                selectedEnd = initialEndPeriod
+            },
             title = { Text("选择时间") },
             confirmButton = {
                 TextButton(
@@ -84,7 +92,12 @@ fun CourseTimePicker(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDialog.value = false }) {
+                TextButton(onClick = {
+                    showDialog.value = false
+                    selectedDay = daysOfWeek[initialDayOfWeek]
+                    selectedStart = initialStartPeriod
+                    selectedEnd = initialEndPeriod
+                }) {
                     Text("取消")
                 }
             },
@@ -94,86 +107,33 @@ fun CourseTimePicker(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
                 ) {
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Text("周几")
-                        Spacer(modifier = Modifier.height(8.dp))
-                        LazyColumn(
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            itemsIndexed(daysOfWeek) { index, day ->
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.Center,
-                                ) {
-                                    RadioButton(
-                                        selected = (day == selectedDay),
-                                        onClick = { selectedDay = day },
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(day)
-                                }
-                            }
+                    ListItemPicker(
+                        textStyle = MaterialTheme.typography.titleMedium,
+                        value = selectedDay,
+                        dividersColor = Color.Black,
+                        list = daysOfWeek,
+                        onValueChange = {
+                            selectedDay = it
                         }
-                    }
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Text("开始")
-                        Spacer(modifier = Modifier.height(8.dp))
-                        LazyColumn(
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            for (i in 1..coursesPerDay){
-                                item {
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.Center,
-                                    ) {
-                                        RadioButton(
-                                            selected = (i == selectedStart),
-                                            onClick = {
-                                                updateSelectedStart( i )
-                                            },
-                                        )
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text("第${i}节")
-                                    }
-                                }
-                            }
+                    )
+                    ListItemPicker(
+                        textStyle = MaterialTheme.typography.titleMedium,
+                        value = selectedStart,
+                        dividersColor = Color.Black,
+                        list = periodList,
+                        onValueChange = {
+                            updateSelectedStart(it)
                         }
-                    }
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Text("结束")
-                        Spacer(modifier = Modifier.height(8.dp))
-                        LazyColumn(
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            for (i in 1..coursesPerDay){
-                                item {
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.Center,
-                                    ) {
-                                        RadioButton(
-                                            selected = (i == selectedEnd),
-                                            onClick = {
-                                                updateSelectedEnd( i )
-                                            },
-                                        )
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text("第${i}节")
-                                    }
-                                }
-                            }
+                    )
+                    ListItemPicker(
+                        textStyle = MaterialTheme.typography.titleMedium,
+                        value = selectedEnd,
+                        dividersColor = Color.Black,
+                        list = periodList,
+                        onValueChange = {
+                            updateSelectedEnd(it)
                         }
-                    }
+                    )
                 }
             }
         )

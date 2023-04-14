@@ -2,10 +2,9 @@ package com.example.timetable_application.db
 
 import com.example.timetable_application.entity.Course
 import com.example.timetable_application.entity.CourseTime
+import com.example.timetable_application.entity.TemplateColors
 import com.example.timetable_application.entity.Timetable
 import com.google.android.gms.common.util.CollectionUtils.listOf
-import java.util.*
-import kotlin.random.Random
 
 object DbHelper{
     fun creatExampleTimetable(): Timetable {
@@ -24,9 +23,8 @@ object DbHelper{
         return Timetable(name, "2023-01-01", 1, 20, 20, courseMap)
     }
     fun creatExampleCourse(): Course {
-        val courseTime1 = CourseTime(1, listOf(1, 2, 3), listOf(1,2))
-        val course = Course("", "0000FF", mutableListOf(courseTime1))
-        return course
+        val courseTime1 = CourseTime(1, listOf(1, 2, 3), listOf(1, 2))
+        return Course("", TemplateColors().colorList.random().substring(1), mutableListOf(courseTime1))
     }
 
 }

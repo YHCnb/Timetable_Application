@@ -28,6 +28,10 @@ class DatabaseTimetableRepository(private val db: TimetableDatabase) {
         // update the default timetable name in the settings table
         timetableDao.updateSettingByName("default_timetable", name)
     }
+    suspend fun getDefaultTimetableName(): String {
+        // update the default timetable name in the settings table
+        return timetableDao.getSettingByName("default_timetable").value
+    }
     //为数据库添加timetable
     suspend fun addTimetable(timetable: Timetable) {
         timetableDao.insertTimetable(timetable)

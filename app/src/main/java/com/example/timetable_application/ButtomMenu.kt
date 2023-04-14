@@ -38,7 +38,8 @@ fun BottomMenu(navController: NavController) {
         BottomMenuScreen.TimetableScreen
     )
     NavigationBar(
-        contentColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         modifier = Modifier.height(70.dp)
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -48,7 +49,13 @@ fun BottomMenu(navController: NavController) {
             NavigationBarItem(
                 label = { Text(text = it.route) },
                 alwaysShowLabel = true,
-                colors =NavigationBarItemDefaults.colors(),
+                colors = NavigationBarItemDefaults.colors(
+//                    selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+//                    selectedTextColor = MaterialTheme.colorScheme.secondaryContainer,
+//                    indicatorColor = MaterialTheme.colorScheme.onSecondaryContainer,
+//                    unselectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+//                    unselectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                ),
                 selected = currentRoute == it.route,
                 onClick = {
                     navController.navigate(it.route)

@@ -1,20 +1,27 @@
 package com.example.timetable_application.ui.screen.timetable.courseEditorScreen
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.timetable_application.entity.Course
 import com.example.timetable_application.entity.CourseTime
+import com.example.timetable_application.ui.screen.MySnackbar
+import com.example.timetable_application.ui.screen.timetable.dialogs.SaveOrLeaveDialog
 import com.example.timetable_application.ui.screen.timetable.pickers.ColorPicker
+import kotlinx.coroutines.launch
 
 //需要同时完成两个目标，修改课程与增加课程
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,16 +30,19 @@ fun CourseEditor(navController: NavController,weeksOfTerm:Int,coursesPerDay:Int,
     var nameState by remember() {mutableStateOf(course.name)}
     var colorState by remember() { mutableStateOf(course.color) }
     val timesState = remember() { mutableStateListOf<CourseTime>(*course.time.toTypedArray()) }
-    var message by remember { mutableStateOf("") }
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(scope){
-        if (message!=""){
-            snackbarHostState.showSnackbar(message)
-        }
-    }
+    val focusManager = LocalFocusManager.current
+
     Scaffold(
+        modifier = Modifier.fillMaxSize()
+            .clickable(//使得动画效果不显示
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+            ){//收起键盘
+                focusManager.clearFocus()
+            },
         // 定义头部
         topBar = {
             EditorTopAppBar(
@@ -43,9 +53,9 @@ fun CourseEditor(navController: NavController,weeksOfTerm:Int,coursesPerDay:Int,
                     //创建newCourse
                     val newCourse = Course(name = nameState,color = colorState, time = timesState.toMutableStateList())
                     if(newCourse.name==""){
-                        message = "课程名不能为空！"
+                        scope.launch { snackbarHostState.showSnackbar("课程名不能为空！") }
                     }else if(newCourse.name!=course.name && courseList.any { it.name == newCourse.name }){
-                        message="课程名称冲突！"
+                        scope.launch { snackbarHostState.showSnackbar("课程名称冲突！") }
                     }else{
                         //判断是否有课程冲突
                         var isConflict = false
@@ -64,7 +74,8 @@ fun CourseEditor(navController: NavController,weeksOfTerm:Int,coursesPerDay:Int,
                                 }
                             }
                         }
-                        if(isConflict){ message="课程冲突"}
+                        if(isConflict){
+                            scope.launch { snackbarHostState.showSnackbar("课程冲突") } }
                         else{
                             //如果都没错误，则返回newCourse和原来course的名字，方便更新
                             navController.previousBackStackEntry?.savedStateHandle?.set("newCourse", newCourse)
@@ -73,7 +84,7 @@ fun CourseEditor(navController: NavController,weeksOfTerm:Int,coursesPerDay:Int,
                         }
                     }
                 }else{
-                    message="未接收到courseMap，保存失败"
+                    scope.launch{snackbarHostState.showSnackbar("未接收到courseMap，保存失败")}
                     navController.popBackStack()
                 }
             }
@@ -89,11 +100,18 @@ fun CourseEditor(navController: NavController,weeksOfTerm:Int,coursesPerDay:Int,
                         value = nameState,
                         onValueChange = { nameState=it },
                         label = { Text("课程名字") },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        colors= TextFieldDefaults.textFieldColors(
+                            containerColor = MaterialTheme.colorScheme.background
+                        )
                     )
                 }
                 item { ColorPicker(initialColor = colorState, onColorChanged = {colorState=it}) }
                 itemsIndexed(timesState){ index, _ ->
+                    Divider(
+                        color = MaterialTheme.colorScheme.surface,
+                        thickness = 2.dp,
+                    )
                     CourseTimeEditor(
                         time = timesState[index],
                         weeksOfTerm = weeksOfTerm,
@@ -106,34 +124,19 @@ fun CourseEditor(navController: NavController,weeksOfTerm:Int,coursesPerDay:Int,
                         }
                     )
                 }
-                item {
-                    Button(
-                        onClick = {
-                            timesState.add(CourseTime())
-                        },
-                        modifier = Modifier.padding(top = 16.dp)
-                    ) {
-                        Text("添加时间段")
-                    }
+            }
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    timesState.add(CourseTime())
                 }
+            ) {
+                Icon(Icons.Filled.Add, contentDescription = null)
             }
         },
         snackbarHost = {
-            SnackbarHost(
-                hostState = snackbarHostState,
-                snackbar = { data ->
-                    Snackbar(
-                        action = {
-                            TextButton(onClick = { snackbarHostState.currentSnackbarData?.dismiss() }) {
-                                Text(text = "Dismiss")
-                            }
-                        },
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Text(data.visuals.message)
-                    }
-                }
-            )
+            MySnackbar(snackbarHostState = snackbarHostState)
         },
     )
 }

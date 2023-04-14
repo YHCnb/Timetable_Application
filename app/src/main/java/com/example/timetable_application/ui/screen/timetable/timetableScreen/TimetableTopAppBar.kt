@@ -1,6 +1,8 @@
 package com.example.timetable_application.ui.screen.timetable.timetableScreen
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -10,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.timetable_application.entity.Course
 import java.time.LocalDate
@@ -61,13 +64,15 @@ fun TimeColumn(){
     Column {
         Text(
             text = dateFormatter.format(currentDate),
+//            fontSize = 20.sp,
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(top = 4.dp, start = 8.dp, end = 8.dp)
+            modifier = Modifier.padding(top = 4.dp, start = 4.dp, end = 8.dp)
         )
         Text(
             text = weekDay,
+//            fontSize = 15.sp,
             style = MaterialTheme.typography.titleSmall,
-            modifier = Modifier.padding(bottom = 4.dp, start = 8.dp, end = 8.dp)
+            modifier = Modifier.padding(bottom = 4.dp, start = 4.dp, end = 8.dp)
         )
     }
 }

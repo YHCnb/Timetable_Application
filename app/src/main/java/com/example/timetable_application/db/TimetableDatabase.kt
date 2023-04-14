@@ -2,6 +2,7 @@ package com.example.timetable_application.db
 
 import androidx.room.*
 import com.example.timetable_application.entity.Settings
+import com.example.timetable_application.entity.TimeSchedule
 import com.example.timetable_application.entity.Timetable
 import kotlinx.coroutines.flow.Flow
 

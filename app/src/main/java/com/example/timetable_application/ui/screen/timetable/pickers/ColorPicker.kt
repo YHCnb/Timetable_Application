@@ -12,99 +12,81 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.substring
 import androidx.compose.ui.unit.dp
+import com.example.timetable_application.R
+import com.example.timetable_application.entity.TemplateColors
 import com.github.skydoves.colorpicker.compose.*
+import com.maxkeppeker.sheets.core.models.base.UseCaseState
+import com.maxkeppeler.sheets.calendar.models.CalendarSelection
+import com.maxkeppeler.sheets.color.ColorDialog
+import com.maxkeppeler.sheets.color.models.ColorConfig
+import com.maxkeppeler.sheets.color.models.ColorSelection
+import com.maxkeppeler.sheets.color.models.ColorSelectionMode
+import com.maxkeppeler.sheets.color.models.MultipleColors
+import kotlinx.coroutines.launch
+import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ColorPicker(
     initialColor: String,
     onColorChanged: (String) -> Unit,
 ) {
     var selectedColor by remember { mutableStateOf(initialColor) }
-    val showDialog = remember { mutableStateOf(false) }
+    val colorPickerState = UseCaseState(embedded = false)
+
     Box(
         Modifier
             .fillMaxWidth()
-            .height(64.dp)
-            .clickable { showDialog.value = true }
-            .padding(16.dp)
+            .clickable { colorPickerState.show() }
+            .height(50.dp)
+            .padding(10.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = null,
-            tint = Color(java.lang.Long.parseLong("FF$initialColor", 16)),
-            modifier = Modifier.size(32.dp)
-        )
-        Column(
-            Modifier
-                .padding(start = 24.dp)
-                .align(Alignment.CenterStart)
+        Row(
+            Modifier.fillMaxHeight(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Icon(
+                painter = painterResource(id = R.drawable.color_card),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
+            )
+            Spacer(modifier = Modifier.width(20.dp))
             Text(
                 text = "点此更改颜色",
-                color = Color(java.lang.Long.parseLong("FF$initialColor", 16)),
+                color = MaterialTheme.colorScheme.onSurface,
+//                Color(java.lang.Long.parseLong("FF$initialColor", 16)),
                 style = MaterialTheme.typography.bodyMedium
             )
+
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Icon(
+                    painter = painterResource(id = R.drawable.square),
+                    contentDescription = null,
+                    tint = Color(java.lang.Long.parseLong("FF$initialColor", 16)),
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                )
+            }
         }
     }
-    //这里使用了github开源的colorpicker-compose
-    val controller = rememberColorPickerController()
-    if (showDialog.value){
-        AlertDialog(
-            onDismissRequest = { showDialog.value = false },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        onColorChanged(selectedColor)
-                        showDialog.value = false
-                    }
-                ) {
-                    Text("确定")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDialog.value = false }) {
-                    Text("取消")
-                }
-            },
-            modifier = Modifier.width(300.dp),
-            text = {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        HsvColorPicker(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(400.dp)
-                                .padding(5.dp),
-                            controller = controller,
-                            onColorChanged = { colorEnvelope: ColorEnvelope ->
-                                selectedColor = colorEnvelope.hexCode.substring(2)
-                            }
-                        )
-                        BrightnessSlider(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(5.dp)
-                                .height(35.dp),
-                            controller = controller,
-                        )
-                        AlphaTile(
-                            modifier = Modifier
-                                .size(80.dp)
-                                .clip(RoundedCornerShape(6.dp)),
-                            controller = controller
-                        )
-                    }
-                }
-            }
-        )
-    }
+    ColorDialog(
+        state = colorPickerState,
+        config = ColorConfig(
+            allowCustomColorAlphaValues = false,
+            defaultDisplayMode = ColorSelectionMode.CUSTOM,
+            templateColors = templateColors()
+        ),
+        selection = ColorSelection { color->
+            selectedColor = String.format("%06X", 0xFFFFFF and color)
+            onColorChanged(selectedColor)
+        }
+    )
+}
+//备选颜色
+fun templateColors(): MultipleColors.ColorsHex {
+    return MultipleColors.ColorsHex(
+        TemplateColors().colorList
+    )
 }

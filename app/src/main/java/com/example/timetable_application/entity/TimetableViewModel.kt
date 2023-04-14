@@ -4,9 +4,9 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import androidx.room.Room
+import com.example.timetable_application.db.DbHelper
 import com.example.timetable_application.db.TimetableDatabase
 import kotlinx.coroutines.launch
-import java.sql.Time
 
 class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
     //创建数据库
@@ -15,7 +15,9 @@ class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
         Room.databaseBuilder(
             app, TimetableDatabase::class.java,
             "timetable.db"
-        ).createFromAsset("default_data.db").build()
+        )
+            .createFromAsset("default_data.db")
+            .build()
     }
     //timetableRepository
     private var timetableRepository: DatabaseTimetableRepository = DatabaseTimetableRepository(db)
@@ -41,10 +43,14 @@ class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
     private val _timetableList = MutableLiveData< List<Timetable> >()
     val timetableList: LiveData< List<Timetable> >
         get() = _timetableList
+    private val _defaultTimetableName = MutableLiveData< String >()
+    val defaultTimetableName: LiveData< String >
+        get() = _defaultTimetableName
 
     init {
         viewModelScope.launch {
             changeTimetable()
+            _defaultTimetableName.value = timetableRepository.getDefaultTimetableName()
         }
     }
     //获取所有课表
@@ -59,8 +65,8 @@ class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
             //LiveData 只会在其值被设置时才会触发更新，而不会在其值的属性被修改时触发更新。
             // 所以，如果只是修改了 _timetable.value 的 name 属性，
             // 而没有重新设置 _timetable.value，那么 Compose 中的状态变量就不会收到通知，并且界面也不会刷新。
+            _defaultTimetableName.value = name
             timetableRepository.setDefaultTimetable(name)
-            changeTimetable()
         }
     }
     //添加课表
@@ -73,19 +79,22 @@ class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
     //改变当前的timetable,name为“”则为默认课表
     fun changeTimetable(name: String="") {
         viewModelScope.launch {
-            val timetable = if(name==""){timetableRepository.getTimetable()}
-                            else {timetableRepository.getTimetableByName(name)}
-            _timetableName.value = timetable.name
-            _startTime.value = timetable.startTime
-            _curWeek.value = timetable.curWeek
-            _coursesPerDay.value = timetable.coursesPerDay
-            _weeksOfTerm.value = timetable.weeksOfTerm
-            _courseMap.value = timetable.courseMap
-            _timetableList.value = timetableRepository.getAllTimetable()
+            if( _timetableName.value==null ||(name==""&&_timetableName.value!=_defaultTimetableName.value)
+                ||(name!=""&&_timetableName.value!=name) ){
+                val timetable = if(name==""){timetableRepository.getTimetable()}
+                                else {timetableRepository.getTimetableByName(name)}
+                _timetableName.value = timetable.name
+                _startTime.value = timetable.startTime
+                _curWeek.value = timetable.curWeek
+                _coursesPerDay.value = timetable.coursesPerDay
+                _weeksOfTerm.value = timetable.weeksOfTerm
+                _courseMap.value = timetable.courseMap
+                _timetableList.value = timetableRepository.getAllTimetable()
+            }
         }
     }
     //删除课表
-    fun deleteTimetable(name:String){
+    fun deleteTimetable(name:String){//无法删除默认课表
         viewModelScope.launch {
             timetableRepository.deleteTimetable(name)
             getTimetableList()

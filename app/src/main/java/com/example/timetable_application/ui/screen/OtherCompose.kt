@@ -1,63 +1,72 @@
 package com.example.timetable_application.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.chargemap.compose.numberpicker.ListItemPicker
+import com.example.timetable_application.entity.OneTime
+import com.example.timetable_application.ui.screen.timetable.TimeScheduleTopAppBar
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.android.gms.common.util.CollectionUtils.listOf
+import com.maxkeppeker.sheets.core.models.base.UseCaseState
+import com.maxkeppeler.sheets.date_time.DateTimeDialog
+import com.maxkeppeler.sheets.date_time.models.DateTimeSelection
+import java.sql.Time
 
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun OtherCompose(navController: NavController){
-    val list = listOf(0,1,2,3,4,5,6,7,8,9,10)
-    var pickerValue by remember { mutableStateOf(list[0]) }
-    val showDialog = remember { mutableStateOf(false ) }
+    val times = kotlin.collections.listOf(
+        OneTime(Time(9, 0, 0), Time(9, 0, 0)),
+        OneTime(Time(10, 0, 0), Time(11, 0, 0)),
+        OneTime(Time(11, 0, 0), Time(12, 0, 0)),
+        OneTime(Time(12, 0, 0), Time(13, 0, 0)),
+        OneTime(Time(13, 0, 0), Time(14, 0, 0)),
+        OneTime(Time(14, 0, 0), Time(15, 0, 0)),
+        OneTime(Time(15, 0, 0), Time(16, 0, 0)),
+        OneTime(Time(16, 0, 0), Time(17, 0, 0)),
+        OneTime(Time(17, 0, 0), Time(18, 0, 0)),
+        OneTime(Time(17, 0, 0), Time(19, 0, 0)),
+        OneTime(Time(19, 0, 0), Time(20, 0, 0)),
+        OneTime(Time(20, 0, 0), Time(21, 0, 0)),
+        OneTime(Time(21, 0, 0), Time(22, 0, 0)),
+        OneTime(Time(22, 0, 0), Time(23, 0, 0)),
+    )
 
-    Button(onClick = {
-        showDialog.value =true
-    }) {
-        Text(text = pickerValue.toString())
-    }
 
-    if(showDialog.value){
-        AlertDialog(
-            onDismissRequest = { showDialog.value = false },
-            title = { Text("选择时间") },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showDialog.value = false
-                    }
-                ) {
-                    Text("确定")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDialog.value = false }) {
-                    Text("取消")
-                }
-            },
-            modifier = Modifier.width(300.dp),
-            text = {
-                ListItemPicker(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = pickerValue,
-                    dividersColor = Color.Black,
-                    list = list,
-                    onValueChange = {
-                        pickerValue = it
-                    }
-                )
+    Scaffold(
+        topBar = {
+            TimeScheduleTopAppBar(onBackPressed = { navController.popBackStack() }) {
+
             }
-        )
+        }
+    ) {paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues)
+                .background(Color.LightGray)
+        ) {
+            Column {
+                times.forEachIndexed { index, time ->
+                    Row {
+                        Text("第${index + 1}节")
+                        Spacer(modifier = Modifier.weight(1f))
+                        Button(onClick = { /*TODO*/ }) {
+                            Text(time.startTiem.toString())
+                        }
+                        Button(onClick = { /*TODO*/ }) {
+                            Text(time.endTime.toString())
+                        }
+                    }
+                }
+            }
+        }
     }
 }

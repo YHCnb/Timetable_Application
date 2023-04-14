@@ -3,17 +3,14 @@ package com.example.timetable_application.ui.screen.timetable.courseEditorScreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.example.timetable_application.R
 import com.example.timetable_application.entity.CourseTime
 import com.example.timetable_application.ui.screen.timetable.pickers.CourseTimePicker
 import com.example.timetable_application.ui.screen.timetable.pickers.TextPicker
@@ -33,16 +30,19 @@ fun CourseTimeEditor(time: CourseTime, weeksOfTerm:Int, coursesPerDay:Int, onTim
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
+            modifier = Modifier.padding(10.dp),
             text = "时间段",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.titleMedium,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onBackground
         )
         IconButton(
             onClick = onDeleteTime
         ) {
             Icon(
-                imageVector = Icons.Filled.Delete,
-                contentDescription = "删除时间段"
+                painter = painterResource(id = R.drawable.delete_key),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onTertiaryContainer
             )
         }
     }
@@ -50,11 +50,11 @@ fun CourseTimeEditor(time: CourseTime, weeksOfTerm:Int, coursesPerDay:Int, onTim
         selectedWeeks=it
         onTimeChanged(time.copy(weeks = selectedWeeks))
     })
-    TextPicker(icon = Icons.Default.Email, initialText = teacherState, title = "教师名字", nullText = "授课老师(可不填)"){
+    TextPicker(iconPainter = painterResource(id = R.drawable.edit_name), initialText = teacherState, title = "教师名字", nullText = "授课老师(可不填)"){
         teacherState = it
         onTimeChanged(time.copy(teacher = teacherState))
     }
-    TextPicker(icon = Icons.Default.Home, initialText = positionState, title = "上课地点", nullText = "上课地点(可不填)"){
+    TextPicker(iconPainter = painterResource(id = R.drawable.building_three), initialText = positionState, title = "上课地点", nullText = "上课地点(可不填)"){
         positionState = it
         onTimeChanged(time.copy(position = positionState))
     }
