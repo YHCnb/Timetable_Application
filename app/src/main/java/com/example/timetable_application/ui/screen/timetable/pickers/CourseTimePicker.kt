@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.chargemap.compose.numberpicker.ListItemPicker
 import com.example.timetable_application.R
+import com.example.timetable_application.entity.Week
 
 @Composable
 fun CourseTimePicker(
@@ -24,7 +25,7 @@ fun CourseTimePicker(
     initialEndPeriod:Int,
     onTimeSelected: (dayOfWeek: Int, startPeriod: Int, endPeriod: Int) -> Unit,
 ) {
-    val daysOfWeek = listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日")
+    val daysOfWeek = Week().dayOfWeek
     val periodList = (1..coursesPerDay).toList()
     var selectedDay by remember { mutableStateOf(daysOfWeek[initialDayOfWeek]) }
     var selectedStart by remember { mutableStateOf(initialStartPeriod) }

@@ -54,8 +54,9 @@ fun TextPicker(
         showDialog = showDialog.value,
         title = title,
         initialText = initialText,
-        onClose = { showDialog.value=false },
-        onTextChanged = {
+        onDismiss = { showDialog.value=false },
+        onConfirm = {
+            showDialog.value=false
             text=it
             onTextChanged(it)
         }

@@ -28,10 +28,6 @@ fun WeeksPicker(
             selectedWeeks.add(it)
         }
     }
-    val weeksText = remember { mutableStateOf("") }
-    SelectedWeeksText(selectedWeeks.toList()){
-        weeksText.value = it
-    }
     val showDialog = remember { mutableStateOf(false) }
 
     Box(
@@ -52,7 +48,7 @@ fun WeeksPicker(
             )
             Spacer(modifier = Modifier.width(20.dp))
             Text(
-                text = weeksText.value,
+                text = selectedWeeksText(selectedWeeks),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleMedium
             )
@@ -119,8 +115,7 @@ fun WeeksPicker(
         )
     }
 }
-@Composable
-fun SelectedWeeksText(selectedWeeks:List<Int>,onTextReturn:(s:String)-> Unit){
+fun selectedWeeksText(selectedWeeks:List<Int>):String{
     selectedWeeks.sorted()
     var pre = -1
     var start = -1//表示没有开头，此时为第一个
@@ -147,5 +142,5 @@ fun SelectedWeeksText(selectedWeeks:List<Int>,onTextReturn:(s:String)-> Unit){
             s+="第${pre}周"
         }
     }
-    onTextReturn(s)
+    return s
 }

@@ -26,6 +26,8 @@ import com.example.timetable_application.ui.screen.timetable.courseEditorScreen.
 import com.example.timetable_application.ui.screen.timetable.CourseManagement
 import com.example.timetable_application.ui.screen.timetable.timetableScreen.TimetableScreen
 import com.example.timetable_application.entity.TimetableViewModel
+import com.example.timetable_application.ui.screen.timetable.TimeScheduleEditor
+import com.example.timetable_application.ui.screen.timetable.TimeTableEditor
 import com.example.timetable_application.ui.screen.timetable.TimeTableManagement
 import com.google.android.gms.common.util.CollectionUtils.listOf
 
@@ -68,6 +70,21 @@ fun Navigation(navController: NavHostController, scrollState: ScrollState,
         }
         composable("TimetableManagement") {
             TimeTableManagement(navController = navController, vm = vm)
+        }
+        composable("TimeScheduleEditor"){
+            TimeScheduleEditor(navController = navController, vm = vm)
+        }
+        composable(
+            "TimetableEditor/{timetableName}",
+            arguments = listOf(navArgument("timetableName"){//传入timetableName参数
+                type = NavType.StringType
+            })
+        ){
+            val timetableName = it.arguments?.getString("timetableName")!!
+            if(timetableName!=vm.timetableName.value){
+                vm.changeTimetable(timetableName)//课表名不同，先改变课表，再导航
+            }
+            TimeTableEditor(navController = navController, vm = vm)
         }
         composable(
             "CourseManagement/{timetableName}",

@@ -1,72 +1,118 @@
 package com.example.timetable_application.ui.screen
-
-import androidx.compose.foundation.background
+import android.content.Intent
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.navigation.NavController
+import com.google.accompanist.pager.ExperimentalPagerApi
+import android.graphics.Bitmap
+import android.net.Uri
+import android.util.Log
+import android.webkit.WebView
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.chargemap.compose.numberpicker.ListItemPicker
-import com.example.timetable_application.entity.OneTime
-import com.example.timetable_application.ui.screen.timetable.TimeScheduleTopAppBar
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.android.gms.common.util.CollectionUtils.listOf
-import com.maxkeppeker.sheets.core.models.base.UseCaseState
-import com.maxkeppeler.sheets.date_time.DateTimeDialog
-import com.maxkeppeler.sheets.date_time.models.DateTimeSelection
-import java.sql.Time
+import com.google.accompanist.web.*
 
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun OtherCompose(navController: NavController){
-    val times = kotlin.collections.listOf(
-        OneTime(Time(9, 0, 0), Time(9, 0, 0)),
-        OneTime(Time(10, 0, 0), Time(11, 0, 0)),
-        OneTime(Time(11, 0, 0), Time(12, 0, 0)),
-        OneTime(Time(12, 0, 0), Time(13, 0, 0)),
-        OneTime(Time(13, 0, 0), Time(14, 0, 0)),
-        OneTime(Time(14, 0, 0), Time(15, 0, 0)),
-        OneTime(Time(15, 0, 0), Time(16, 0, 0)),
-        OneTime(Time(16, 0, 0), Time(17, 0, 0)),
-        OneTime(Time(17, 0, 0), Time(18, 0, 0)),
-        OneTime(Time(17, 0, 0), Time(19, 0, 0)),
-        OneTime(Time(19, 0, 0), Time(20, 0, 0)),
-        OneTime(Time(20, 0, 0), Time(21, 0, 0)),
-        OneTime(Time(21, 0, 0), Time(22, 0, 0)),
-        OneTime(Time(22, 0, 0), Time(23, 0, 0)),
-    )
+    var url by remember { mutableStateOf(
+        "https://webvpn.bit.edu.cn/https/77726476706e69737468656265737421fae04c8f69326144300d8db9d6562d/")}
+//    https://jwms.bit.edu.cn/
+    val state = rememberWebViewState(url = url)
+    val navigator = rememberWebViewNavigator()
+    var textFieldValue by remember(state.content.getCurrentUrl()) {
+        mutableStateOf(state.content.getCurrentUrl() ?: "")
+    }
 
-
-    Scaffold(
-        topBar = {
-            TimeScheduleTopAppBar(onBackPressed = { navController.popBackStack() }) {
-
+    Column {
+        TopAppBar {
+            IconButton(onClick = { navigator.navigateBack() }) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back"
+                )
             }
-        }
-    ) {paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(paddingValues)
-                .background(Color.LightGray)
-        ) {
-            Column {
-                times.forEachIndexed { index, time ->
-                    Row {
-                        Text("第${index + 1}节")
-                        Spacer(modifier = Modifier.weight(1f))
-                        Button(onClick = { /*TODO*/ }) {
-                            Text(time.startTiem.toString())
-                        }
-                        Button(onClick = { /*TODO*/ }) {
-                            Text(time.endTime.toString())
-                        }
-                    }
+            IconButton(onClick = { navigator.navigateForward() }) {
+                Icon(
+                    imageVector = Icons.Default.ArrowForward,
+                    contentDescription = "Forward"
+                )
+            }
+            Text(
+                text = "Web Browser",
+                style = MaterialTheme.typography.headlineMedium,
+            )
+            Row(
+                modifier = Modifier.weight(1f),
+                horizontalArrangement = Arrangement.End
+            ) {
+                IconButton(onClick = { navigator.reload() }) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = "Refresh"
+                    )
+                }
+                IconButton(onClick = { url = textFieldValue }) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = "Go"
+                    )
                 }
             }
         }
+        Row(modifier = Modifier.padding(all = 12.dp)) {
+            BasicTextField(
+                modifier = Modifier.weight(9f),
+                value = textFieldValue,
+                onValueChange = { textFieldValue = it },
+                maxLines = 1
+            )
+            if (state.errorsForCurrentRequest.isNotEmpty()) {
+                Icon(
+                    modifier = Modifier
+                        .weight(1f),
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = "Error",
+                    tint = Color.Red
+                )
+            }
+        }
+
+        val loadingState = state.loadingState
+        if (loadingState is LoadingState.Loading) {
+            LinearProgressIndicator(
+                progress = loadingState.progress,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        // A custom WebViewClient and WebChromeClient can be provided via subclassing
+        val webClient = remember {
+            object : AccompanistWebViewClient() {
+                override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
+                    super.onPageStarted(view, url, favicon)
+                    Log.d("Accompanist WebView", "Page started loading for $url")
+                }
+            }
+        }
+
+        WebView(
+            state = state,
+            modifier = Modifier.weight(1f),
+            navigator = navigator,
+            onCreated = { webView ->
+                webView.settings.javaScriptEnabled = true
+            },
+            client = webClient
+        )
     }
 }

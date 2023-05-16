@@ -1,43 +1,31 @@
-package com.example.timetable_application.ui.screen.timetable.pickers
+package com.example.timetable_application.ui.screen.timetable.dialogs
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.chargemap.compose.numberpicker.ListItemPicker
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyNumberPicker(title:String ,list: List<Any>,initialIndex:Int,
-                   onConfirm:(index: Int)-> Unit, onClose:()-> Unit, onDismiss:()-> Unit){
-    val showNumberPicker = remember { mutableStateOf(false) }
+fun NumberDialog(title:String,show:Boolean,list: List<Any>,initialIndex:Int,
+                 onDismiss: () -> Unit,onConfirm:(num: Int)-> Unit){
     var pickerValue by remember { mutableStateOf(list[initialIndex]) }
-
-    NavigationDrawerItem(
-        label = {
-            Text(text = title)
-        },
-        selected = false,
-        onClick = {
-            onClose()
-            showNumberPicker.value=true
-        }
-    )
-
-    if(showNumberPicker.value){
+    if(show){
         AlertDialog(
             onDismissRequest = {
-                showNumberPicker.value = false
                 onDismiss()
+                pickerValue=list[initialIndex]//恢复初始值
             },
             title = { Text("$title: $pickerValue") },
             confirmButton = {
                 TextButton(
                     onClick = {
                         onConfirm(list.indexOf(pickerValue)+1)
-                        showNumberPicker.value=false
                     }
                 ) {
                     Text("确定")
@@ -45,8 +33,8 @@ fun MyNumberPicker(title:String ,list: List<Any>,initialIndex:Int,
             },
             dismissButton = {
                 TextButton(onClick = {
-                    showNumberPicker.value=false
                     onDismiss()
+                    pickerValue=list[initialIndex]//恢复初始值
                 }) {
                     Text("取消")
                 }

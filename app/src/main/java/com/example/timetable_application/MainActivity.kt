@@ -1,15 +1,19 @@
 package com.example.timetable_application
 
 import android.app.Application
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.webkit.WebView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +22,8 @@ import com.example.timetable_application.ui.MyApp
 import com.example.timetable_application.entity.TimetableViewModel
 import com.example.timetable_application.entity.TimetableViewModelFactory
 import com.example.timetable_application.ui.theme.Timetable_ApplicationTheme
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 class MainActivity : ComponentActivity() {
     //申明viewModel和viewModelFactory，但不马上初始化（lateinit）

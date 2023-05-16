@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -19,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.timetable_application.entity.Course
 import com.example.timetable_application.entity.TimetableViewModel
+import com.example.timetable_application.ui.screen.timetable.dialogs.MyAlertDialog
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,6 +29,10 @@ fun CourseManagement(navController: NavController,vm: TimetableViewModel){
     val navBackStackEntry = navController.currentBackStackEntry
     val newCourse = navBackStackEntry?.savedStateHandle?.get<Course>("newCourse")
     val oldCourseName = navBackStackEntry?.savedStateHandle?.get<String>("oldCourseName")
+
+    var showAlertDialog by remember { mutableStateOf(false) }
+    var message by remember { mutableStateOf("") }
+    var onChangeCourseName =""
 
     if (newCourse!=null && oldCourseName!=null){//更新course
         if(oldCourseName==""){
@@ -38,7 +45,6 @@ fun CourseManagement(navController: NavController,vm: TimetableViewModel){
 
     Box(
         modifier = Modifier
-            .height(600.dp)
     ) {
         Scaffold(
             // 定义头部
@@ -58,24 +64,38 @@ fun CourseManagement(navController: NavController,vm: TimetableViewModel){
                 } } ,
             floatingActionButtonPosition = FabPosition.End,
         ) {
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = "轻触编辑，长按删除",
-                    fontWeight = FontWeight.SemiBold,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                if(courseMap!=null){
-                    CoursesCards(navController, courseMap!!.values,
-                        onDelete = {deleteName->
-                            vm.deleteCourse(deleteName)
-                        }
+                item {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = "轻触编辑，长按删除",
+                        fontWeight = FontWeight.SemiBold,
+                        style = MaterialTheme.typography.bodyMedium
                     )
+                }
+                item {
+                    if(courseMap!=null){
+                        CoursesCards(navController, courseMap!!.values,
+                            onDelete = {name->
+                                onChangeCourseName=name
+                                message = "确认要删除课程[${onChangeCourseName}]吗？此操作将不可撤销。"
+                                showAlertDialog=true
+                            }
+                        )
+                    }
+                    MyAlertDialog(
+                        showDialog = showAlertDialog,
+                        title = "提示",
+                        message = message,
+                        onClose = { showAlertDialog=false }) {
+                        vm.deleteCourse(onChangeCourseName)
+                        showAlertDialog=false
+                    }
                 }
             }
         }
@@ -110,7 +130,7 @@ fun CoursesCards(navController: NavController, courseMap: MutableCollection<Cour
                             },
                             onLongClick = { onDelete(course.name) }
                         ),
-                    border = BorderStroke(1.dp, Color.Black),
+                    border = BorderStroke(1.dp, Color.White),
                     colors = CardDefaults.cardColors(containerColor = Color(java.lang.Long.parseLong("FF${course.color}", 16)))
                 ) {
                     Box(
@@ -124,11 +144,6 @@ fun CoursesCards(navController: NavController, courseMap: MutableCollection<Cour
                             modifier = Modifier.padding(20.dp),
                         )
                     }
-//                    Text(
-//                        text = course.name,
-//                        fontWeight = FontWeight.Normal,
-//                        modifier = Modifier.padding(20.dp),
-//                    )
                 }
             }
         }

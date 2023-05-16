@@ -1,9 +1,7 @@
 package com.example.timetable_application.db
 
 import androidx.room.*
-import com.example.timetable_application.entity.Settings
-import com.example.timetable_application.entity.TimeSchedule
-import com.example.timetable_application.entity.Timetable
+import com.example.timetable_application.entity.*
 import kotlinx.coroutines.flow.Flow
 
 //定义数据存储对象
@@ -27,12 +25,16 @@ interface TimetableDao{
     suspend fun updateSettingByName(name: String, value: String)
     @Query("SELECT * FROM settings WHERE name = :name")
     suspend fun getSettingByName(name: String): Settings
+    //OneClassTime
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOneClassTime(oneClassTime: OneClassTime)
 }
 
 @Database(
-    entities = [Timetable::class, Settings::class],  //表明本数据库有几张表
-    version = 1  //表示当前数据库的版本号
+    entities = [Timetable::class, Settings::class, OneClassTime::class],  //表明本数据库有几张表
+    version = 2  //表示当前数据库的版本号
 )
+@TypeConverters(Converters::class)
 abstract class TimetableDatabase:RoomDatabase(){
     //引用存取特定表的数据存储对象（Dao）
     abstract fun timetableDao(): TimetableDao

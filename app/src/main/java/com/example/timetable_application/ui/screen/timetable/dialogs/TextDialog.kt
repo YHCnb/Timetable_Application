@@ -13,20 +13,21 @@ fun TextDialog(
     showDialog:Boolean,
     title:String,
     initialText:String,
-    onClose:() -> Unit,
-    onTextChanged:(newText: String) -> Unit,
+    onDismiss:() -> Unit,
+    onConfirm:(newText: String) -> Unit,
 ){
     var text by remember { mutableStateOf(initialText) }
     if(showDialog){
         AlertDialog(
-            onDismissRequest = { onClose() },
+            onDismissRequest = {
+                onDismiss()
+                text=initialText
+            },
             title = { Text(title) },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onTextChanged(text)
-                        text=initialText
-                        onClose()
+                        onConfirm(text)
                     }
                 ) {
                     Text(
@@ -36,7 +37,10 @@ fun TextDialog(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { onClose() }) {
+                TextButton(onClick = {
+                    onDismiss()
+                    text=initialText
+                }) {
                     Text(
                         text = "取消",
                         color = MaterialTheme.colorScheme.onPrimaryContainer

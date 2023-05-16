@@ -1,5 +1,7 @@
 package com.example.timetable_application.entity
 
+import androidx.room.OnConflictStrategy
+import androidx.room.Update
 import com.example.timetable_application.db.TimetableDatabase
 import kotlinx.coroutines.flow.first
 
@@ -84,6 +86,7 @@ class DatabaseTimetableRepository(private val db: TimetableDatabase) {
     suspend fun deleteCourse(tbName:String,courseName:String) {
         val tb = timetableDao.getTimetableByName(tbName)
         tb.courseMap.remove(courseName)
+        timetableDao.updateTimetable(tb)
     }
     suspend fun getAllCourse(tbName:String): List<Course> {
         val tb = timetableDao.getTimetableByName(tbName)
@@ -134,6 +137,12 @@ class DatabaseTimetableRepository(private val db: TimetableDatabase) {
             tb.courseMap[targetName] = targetCourse
         }
         timetableDao.updateTimetable(tb)
+    }
+    suspend fun insertSetting(settings:Settings){
+        timetableDao.insertSetting(settings)
+    }
+    suspend fun insertOneClassTime(oneClassTime: OneClassTime){
+        timetableDao.insertOneClassTime(oneClassTime)
     }
 }
 

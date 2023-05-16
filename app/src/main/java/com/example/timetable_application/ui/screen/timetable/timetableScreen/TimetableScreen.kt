@@ -8,13 +8,11 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.timetable_application.R
 import com.example.timetable_application.db.DbHelper
 import com.example.timetable_application.entity.Course
 import com.example.timetable_application.entity.TimetableViewModel
-import com.example.timetable_application.ui.screen.timetable.pickers.MyNumberPicker
+import com.example.timetable_application.ui.screen.timetable.pickers.DrawerNumberPicker
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -58,7 +56,7 @@ fun TimetableScreen(navController: NavController,vm: TimetableViewModel) {
 
     val currentWeek = rememberPagerState(initialPage = curWeek!!)
     val weekDays = listOf("一", "二", "三", "四", "五", "六", "日")
-    val dates = generateWeekDates(startDate = LocalDate.parse(startTime), weeksOfTerm = weeksOfTerm!!)
+    val dates = generateWeekDates(startDate = LocalDate.parse(startTime), weeksOfTerm = 25)
     //用于Drawer
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -104,11 +102,19 @@ fun TimetableScreen(navController: NavController,vm: TimetableViewModel) {
                     },
                     selected = false,
                     onClick = {
-                        scope.launch {//点击即可关闭
-                            drawerState.close()
-
+                        scope.launch {
+                            navController.navigate("TimeScheduleEditor")
                         }
                     }
+                )
+                Divider(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    thickness = 2.dp,
+                )
+                Text(
+                    text = "基本设置",
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.padding(10.dp),
                 )
                 //时间选择
                 val calendarState = UseCaseState(
@@ -135,18 +141,9 @@ fun TimetableScreen(navController: NavController,vm: TimetableViewModel) {
                         vm.editStartTime(date.format(formatter))
                     }
                 )
-                Divider(
-                    color = MaterialTheme.colorScheme.onSurface,
-                    thickness = 2.dp,
-                )
-                Text(
-                    text = "基本设置",
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.padding(10.dp),
-                )
                 NavigationDrawerItem(
                     label = {
-                        Text(text = "设置学期开始时间")
+                        Text(text = "学期开始时间")
                     },
                     selected = false,
                     onClick = {
@@ -156,51 +153,51 @@ fun TimetableScreen(navController: NavController,vm: TimetableViewModel) {
                         }
                     }
                 )
-                MyNumberPicker(title = "设置当前周", list = (1..weeksOfTerm!!).toList(), initialIndex = curWeek!!-1,
+                DrawerNumberPicker(
+                    title = "当前周", list = (1..weeksOfTerm!!).toList(), initialIndex = curWeek!!-1,
                     onClose = {
                         scope.launch {//点击即可关闭
                             drawerState.close()
                         }
                     },
-                    onConfirm = { vm.editCurWeek(it) },
-                    onDismiss = {
-                        scope.launch {//点击即可关闭
-                            drawerState.open()
-                        }
+                    onConfirm = { vm.editCurWeek(it) }
+                ) {
+                    scope.launch {//点击即可关闭
+                        drawerState.open()
                     }
-                )
-                MyNumberPicker(title = "设置节数", list = (1..20).toList(), initialIndex = coursesPerDay!!-1,
+                }
+                DrawerNumberPicker(
+                    title = "课程节数", list = (1..25).toList(), initialIndex = coursesPerDay!!-1,
                     onClose = {
                         scope.launch {//点击即可关闭
                             drawerState.close()
                         }
                     },
-                    onConfirm = { vm.editCoursesPerDay(it) },
-                    onDismiss = {
-                        scope.launch {//点击即可关闭
-                            drawerState.open()
-                        }
+                    onConfirm = { vm.editCoursesPerDay(it) }
+                ) {
+                    scope.launch {//点击即可关闭
+                        drawerState.open()
                     }
-                )
-                MyNumberPicker(title = "设置学期周数", list = (1..25).toList(), initialIndex = weeksOfTerm!!-1,
+                }
+                DrawerNumberPicker(
+                    title = "学期周数", list = (1..25).toList(), initialIndex = weeksOfTerm!!-1,
                     onClose = {
                         scope.launch {//点击即可关闭
                             drawerState.close()
                         }
                     },
-                    onConfirm = { vm.editWeeksOfTerm(it) },
-                    onDismiss = {
-                        scope.launch {//点击即可关闭
-                            drawerState.open()
-                        }
+                    onConfirm = { vm.editWeeksOfTerm(it) }
+                ) {
+                    scope.launch {//点击即可关闭
+                        drawerState.open()
                     }
-                )
+                }
             }
         }
     ) {
         Scaffold(
             topBar = {
-                TimetableTopAppBar(navController=navController,courseMap=courseMap!!,
+                TimetableTopAppBar(navController=navController, vm = vm, courseMap=courseMap!!,
                     onCallSettings = {
                         scope.launch {
                             drawerState.open()
@@ -209,7 +206,7 @@ fun TimetableScreen(navController: NavController,vm: TimetableViewModel) {
                 )
             }
         ) {
-            val timeSchedule = TimeSchedule()
+            val timeSchedule = DbHelper.creatTimeSchedule()
             Column(
                 modifier = Modifier.padding(it)
             ) {
@@ -245,29 +242,4 @@ fun generateWeekDates(startDate:LocalDate ,weeksOfTerm:Int): List< List<LocalDat
         dates.add(newWeek)
     }
     return dates
-}
-fun TimeSchedule(): List<Pair<Time, Time>> {
-    val schedule = kotlin.collections.listOf<Pair<Time, Time>>(
-        Pair(Time(8, 0, 0), Time(8, 45, 0)),
-        Pair(Time(8, 50, 0), Time(9, 35, 0)),
-        Pair(Time(9, 55, 0), Time(10, 40, 0)),
-        Pair(Time(10, 45, 0), Time(11, 30, 0)),
-        Pair(Time(11, 35, 0), Time(12, 20, 0)),
-        Pair(Time(13, 20, 0), Time(14, 5, 0)),
-        Pair(Time(14, 10, 0), Time(14, 55, 0)),
-        Pair(Time(15, 15, 0), Time(16, 0, 0)),
-        Pair(Time(16, 5, 0), Time(16, 50, 0)),
-        Pair(Time(16, 55, 0), Time(17, 40, 0)),
-        Pair(Time(18, 30, 0), Time(19, 15, 0)),
-        Pair(Time(19, 20, 0), Time(20, 5, 0)),
-        Pair(Time(20, 10, 0), Time(20, 55, 0)),
-        Pair(Time(21, 45, 0), Time(21, 50, 0)),
-        Pair(Time(21, 55, 0), Time(22, 0, 0)),
-        Pair(Time(22, 5, 0), Time(22, 10, 0)),
-        Pair(Time(22, 15, 0), Time(22, 20, 0)),
-        Pair(Time(22, 25, 0), Time(22, 30, 0)),
-        Pair(Time(22, 35, 0), Time(22, 40, 0)),
-        Pair(Time(22, 45, 0), Time(22, 50, 0))
-    )
-    return schedule
 }

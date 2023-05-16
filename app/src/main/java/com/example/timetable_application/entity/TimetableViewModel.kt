@@ -7,15 +7,17 @@ import androidx.room.Room
 import com.example.timetable_application.db.DbHelper
 import com.example.timetable_application.db.TimetableDatabase
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
     //创建数据库
     private val db: TimetableDatabase by lazy {
-        Log.d("Room","TimetableDatabase is created")
+        Timber.tag("Room").d("TimetableDatabase is created")
         Room.databaseBuilder(
             app, TimetableDatabase::class.java,
             "timetable.db"
         )
+            .fallbackToDestructiveMigration()
             .createFromAsset("default_data.db")
             .build()
     }
@@ -49,8 +51,21 @@ class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
 
     init {
         viewModelScope.launch {
+//            val times = DbHelper.creatTimeSchedule()
+//            times.forEach {
+//                updateOneClassTime(it)
+//            }
+//            val timetable = DbHelper.creatExampleTimetable()
+//            timetableRepository.addTimetable(timetable)
+//            timetableRepository.insertSetting(Settings("default_timetable",timetable.name))
+            initialTimeSchedule()
             changeTimetable()
             _defaultTimetableName.value = timetableRepository.getDefaultTimetableName()
+        }
+    }
+    fun updateOneClassTime(oneClassTime:OneClassTime) {
+        viewModelScope.launch {
+            timetableRepository.insertOneClassTime(oneClassTime)
         }
     }
     //获取所有课表
@@ -152,6 +167,14 @@ class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             _courseMap.value?.set(course.name,course)
             timetableRepository.addCourse(_timetableName.value!!,course)
+        }
+    }
+    fun initialTimeSchedule(){
+        viewModelScope.launch {
+            val timeSchedule = DbHelper.creatTimeSchedule()
+            for (time in timeSchedule){
+                timetableRepository.insertOneClassTime(time)
+            }
         }
     }
 }

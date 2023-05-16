@@ -107,15 +107,17 @@ fun TimeTableManagement(navController: NavController, vm: TimetableViewModel){
                     showDialog = showTextDialog,
                     title = "课表名称",
                     initialText = "",
-                    onClose = { showTextDialog=false },
-                    onTextChanged = { newName->
+                    onDismiss = { showTextDialog=false },
+                    onConfirm = { newName->
                         //创建一个新的timetable
                         if(timetableList!!.find {  it.name==newName }==null){
                             vm.addTimetable(timetable = DbHelper.creatNewTimetable(newName))
+                            showTextDialog=false
                         }else{
                             scope.launch {
                                 snackbarHostState.showSnackbar("课表重名")
                             }
+                            showTextDialog=false
                         }
                     }
                 )
@@ -158,7 +160,7 @@ fun TimetableCards(navController: NavController, timetableList: List<Timetable>,
                         },
                         onLongClick = { onDelete(timetable.name) }
                     ),
-                border = BorderStroke(1.dp, Color.Black),
+//                border = BorderStroke(1.dp, Color.Green),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
             ) {
                 Text(
@@ -181,7 +183,7 @@ fun TimetableCards(navController: NavController, timetableList: List<Timetable>,
                                 Icon(painter = painterResource(id = R.drawable.like), contentDescription=null)
                             }
                         }
-                        IconButton(onClick = {  }) {
+                        IconButton(onClick = { navController.navigate("TimetableEditor/${timetable.name}") }) {
                             Icon(imageVector = Icons.Filled.Edit, contentDescription="editTimetable")
                         }
                     }
