@@ -1,7 +1,6 @@
 package com.example.timetable_application.entity
 
 import android.os.Parcelable
-import androidx.compose.ui.graphics.Color
 import androidx.room.*
 import com.google.android.gms.common.util.CollectionUtils.listOf
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
@@ -21,8 +20,8 @@ data class CourseTime(
     var dayOfWeek: Int=1,
     var timeOfCourse: List<Int> = listOf(1,2),
     var weeks: List<Int> = listOf(1,2,3,4,5),
-    var teacher: String= "",
-    var position: String= ""
+    var teacher: String? = "",
+    var position: String? = ""
 )
 
 @Entity(tableName = "timetable")

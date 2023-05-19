@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Timetable_Application.MySplash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#d7ebd0</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.Timetable_Application</item>
+        <item name="windowSplashScreenAnimationDuration">3000</item>
+    </style>
+</resources>

@@ -21,9 +21,8 @@ import androidx.navigation.NavController
 import com.example.timetable_application.entity.Course
 import com.example.timetable_application.entity.TimetableViewModel
 import com.example.timetable_application.ui.screen.timetable.dialogs.MyAlertDialog
-import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun CourseManagement(navController: NavController,vm: TimetableViewModel){
     val navBackStackEntry = navController.currentBackStackEntry

@@ -21,7 +21,7 @@ fun CourseMessageDialog(
     onClose:() -> Unit,
     onConfirm:() -> Unit,
 ){
-    val daysOfWeek = Week().dayOfWeek
+    val daysOfWeek = Week.dayOfWeek
     if(showDialog){
         AlertDialog(
             onDismissRequest = { onClose() },
@@ -116,7 +116,7 @@ fun CourseMessageDialog(
                                 )
                                 Spacer(modifier = Modifier.width(20.dp))
                                 Text(
-                                    text = if(message.teacher=="") "未填写" else message.teacher,
+                                    text = if(message.teacher=="") "未填写" else message.teacher!!,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     style = MaterialTheme.typography.titleMedium
                                 )
@@ -139,7 +139,7 @@ fun CourseMessageDialog(
                                 )
                                 Spacer(modifier = Modifier.width(20.dp))
                                 Text(
-                                    text = if(message.position=="") "未填写" else message.position,
+                                    text = if(message.position=="") "未填写" else message.position!!,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     style = MaterialTheme.typography.titleMedium
                                 )

@@ -64,11 +64,11 @@ fun CourseTimeEditor(time: CourseTime, weeksOfTerm:Int, coursesPerDay:Int, onTim
             )
         }
     )
-    TextPicker(iconPainter = painterResource(id = R.drawable.edit_name), initialText = teacherState, title = "教师名字", nullText = "授课老师(可不填)"){
+    TextPicker(iconPainter = painterResource(id = R.drawable.edit_name), initialText = teacherState!!, title = "教师名字", nullText = "授课老师(可不填)"){
         teacherState = it
         onTimeChanged(time.copy(teacher = teacherState))
     }
-    TextPicker(iconPainter = painterResource(id = R.drawable.building_three), initialText = positionState, title = "上课地点", nullText = "上课地点(可不填)"){
+    TextPicker(iconPainter = painterResource(id = R.drawable.building_three), initialText = positionState!!, title = "上课地点", nullText = "上课地点(可不填)"){
         positionState = it
         onTimeChanged(time.copy(position = positionState))
     }

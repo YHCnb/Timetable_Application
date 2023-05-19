@@ -35,7 +35,6 @@ fun TimeTableEditor(navController: NavController, vm: TimetableViewModel){
     val curWeek by vm.curWeek.observeAsState()
     val coursesPerDay by vm.coursesPerDay.observeAsState()
     val weeksOfTerm by vm.weeksOfTerm.observeAsState()
-    val courseMap by vm.courseMap.observeAsState()
 
     Scaffold(
         // 定义头部

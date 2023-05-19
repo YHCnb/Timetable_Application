@@ -7,12 +7,11 @@ import androidx.room.Room
 import com.example.timetable_application.db.DbHelper
 import com.example.timetable_application.db.TimetableDatabase
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
     //创建数据库
     private val db: TimetableDatabase by lazy {
-        Timber.tag("Room").d("TimetableDatabase is created")
+        Log.e("Room","TimetableDatabase is created")
         Room.databaseBuilder(
             app, TimetableDatabase::class.java,
             "timetable.db"
@@ -21,6 +20,9 @@ class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
             .createFromAsset("default_data.db")
             .build()
     }
+    private val _isInitial = MutableLiveData<Boolean>(false)
+    val isInitial: LiveData<Boolean>
+        get() = _isInitial
     //timetableRepository
     private var timetableRepository: DatabaseTimetableRepository = DatabaseTimetableRepository(db)
     //课表元素
@@ -58,11 +60,20 @@ class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
 //            val timetable = DbHelper.creatExampleTimetable()
 //            timetableRepository.addTimetable(timetable)
 //            timetableRepository.insertSetting(Settings("default_timetable",timetable.name))
-            initialTimeSchedule()
-            changeTimetable()
+//            initialTimeSchedule()
             _defaultTimetableName.value = timetableRepository.getDefaultTimetableName()
+            val timetable = timetableRepository.getTimetable()
+            _timetableName.value = timetable.name
+            _startTime.value = timetable.startTime
+            _curWeek.value = timetable.curWeek
+            _coursesPerDay.value = timetable.coursesPerDay
+            _weeksOfTerm.value = timetable.weeksOfTerm
+            _courseMap.value = timetable.courseMap
+            _timetableList.value = timetableRepository.getAllTimetable()
+            _isInitial.value=true
         }
     }
+
     fun updateOneClassTime(oneClassTime:OneClassTime) {
         viewModelScope.launch {
             timetableRepository.insertOneClassTime(oneClassTime)
@@ -77,9 +88,6 @@ class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
     //设置默认课表
     fun setDefaultTimetable(name: String){
         viewModelScope.launch {
-            //LiveData 只会在其值被设置时才会触发更新，而不会在其值的属性被修改时触发更新。
-            // 所以，如果只是修改了 _timetable.value 的 name 属性，
-            // 而没有重新设置 _timetable.value，那么 Compose 中的状态变量就不会收到通知，并且界面也不会刷新。
             _defaultTimetableName.value = name
             timetableRepository.setDefaultTimetable(name)
         }
@@ -94,8 +102,10 @@ class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
     //改变当前的timetable,name为“”则为默认课表
     fun changeTimetable(name: String="") {
         viewModelScope.launch {
-            if( _timetableName.value==null ||(name==""&&_timetableName.value!=_defaultTimetableName.value)
-                ||(name!=""&&_timetableName.value!=name) ){
+//            if( _timetableName.value==null
+//                || (name==""&&_timetableName.value!=_defaultTimetableName.value)
+//                ||(name!=""&&_timetableName.value!=name)
+//            ){
                 val timetable = if(name==""){timetableRepository.getTimetable()}
                                 else {timetableRepository.getTimetableByName(name)}
                 _timetableName.value = timetable.name
@@ -105,7 +115,7 @@ class TimetableViewModel(private val app:Application) : AndroidViewModel(app) {
                 _weeksOfTerm.value = timetable.weeksOfTerm
                 _courseMap.value = timetable.courseMap
                 _timetableList.value = timetableRepository.getAllTimetable()
-            }
+//            }
         }
     }
     //删除课表

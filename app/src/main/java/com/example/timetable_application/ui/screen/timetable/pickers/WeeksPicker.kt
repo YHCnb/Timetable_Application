@@ -5,13 +5,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.timetable_application.R
@@ -43,7 +39,6 @@ fun WeeksPicker(
             Icon(
                 painter = painterResource(id = R.drawable.plan),
                 contentDescription = null,
-//                modifier = Modifier.fillMaxSize(),
                 tint = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.width(20.dp))
@@ -64,7 +59,6 @@ fun WeeksPicker(
                 ) {
                     for (i in 1..weeksOfTerm){
                         item {
-//                            val isSelected = remember { mutableStateOf(selectedWeeks.contains(i)) }
                             var isSelected = selectedWeeks.contains(i)
                             TextButton(
                                 onClick = {

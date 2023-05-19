@@ -17,10 +17,8 @@ import androidx.navigation.NavController
 import com.example.timetable_application.entity.Course
 import com.example.timetable_application.entity.CourseTime
 import com.example.timetable_application.entity.OneClassTime
-import com.example.timetable_application.ui.screen.timetable.TimeScheduleEditor
 import com.example.timetable_application.ui.screen.timetable.dialogs.CourseMessageDialog
 import java.lang.Long
-import java.sql.Time
 import java.time.LocalDate
 
 @Composable
@@ -140,12 +138,6 @@ fun OneWeekTimetable(navController: NavController, courseMap:MutableMap<String, 
                                 .offset(x = courseBoxLeft, y = courseStartY)
                                 .padding(1.dp)
                                 .clickable(enabled = true) {
-//                                    navController.currentBackStackEntry?.savedStateHandle?.set(
-//                                        "courseList",
-//                                        courseMap.values.toList()
-//                                    )
-//                                    //根据课程名字进入对应的CourseEditor
-//                                    navController.navigate("CourseEditor/${course.name}")
                                     title = course.name
                                     message = courseTime
                                     showMessage = true

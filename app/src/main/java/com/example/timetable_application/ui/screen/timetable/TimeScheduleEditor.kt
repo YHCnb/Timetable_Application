@@ -20,10 +20,9 @@ import com.example.timetable_application.ui.screen.timetable.dialogs.SaveOrLeave
 import com.example.timetable_application.ui.screen.timetable.dialogs.TimeScheduleDialog
 import com.example.timetable_application.ui.theme.Orange30
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimeScheduleEditor(navController: NavController,vm: TimetableViewModel){
-    var times = DbHelper.creatTimeSchedule()
+    val times = DbHelper.creatTimeSchedule()
     var showDialog by remember { mutableStateOf(false) }
     var initialOneClassTime by remember { mutableStateOf(times[0]) }
     var onChangeIndex = -1

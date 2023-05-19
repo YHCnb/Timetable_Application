@@ -2,13 +2,8 @@ package com.example.timetable_application.ui.screen.timetable.pickers
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -25,7 +20,7 @@ fun CourseTimePicker(
     initialEndPeriod:Int,
     onTimeSelected: (dayOfWeek: Int, startPeriod: Int, endPeriod: Int) -> Unit,
 ) {
-    val daysOfWeek = Week().dayOfWeek
+    val daysOfWeek = Week.dayOfWeek
     val periodList = (1..coursesPerDay).toList()
     var selectedDay by remember { mutableStateOf(daysOfWeek[initialDayOfWeek]) }
     var selectedStart by remember { mutableStateOf(initialStartPeriod) }
@@ -45,7 +40,6 @@ fun CourseTimePicker(
             Icon(
                 painter = painterResource(id = R.drawable.time),
                 contentDescription = null,
-//                modifier = Modifier.fillMaxSize(),
                 tint = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.width(20.dp))

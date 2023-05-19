@@ -8,11 +8,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.android.gms.common.util.CollectionUtils.listOf
 
@@ -22,8 +20,8 @@ sealed class BottomMenuScreen(
     val title: String
 ) {
     //导航元素清单
-    object MainCompose : BottomMenuScreen("Main",
-        Icons.Default.Home, "Main")
+    object MainCompose : BottomMenuScreen("LoginBIT",
+        Icons.Default.Home, "LoginBIT")
     object OtherCompose : BottomMenuScreen("Other",
         Icons.Default.Menu, "Other")
     object TimetableScreen : BottomMenuScreen("Timetable",
@@ -40,7 +38,7 @@ fun BottomMenu(navController: NavController) {
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        modifier = Modifier.height(70.dp)
+        modifier = Modifier.height(7.dp)
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
@@ -49,13 +47,6 @@ fun BottomMenu(navController: NavController) {
             NavigationBarItem(
                 label = { Text(text = it.route) },
                 alwaysShowLabel = true,
-                colors = NavigationBarItemDefaults.colors(
-//                    selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-//                    selectedTextColor = MaterialTheme.colorScheme.secondaryContainer,
-//                    indicatorColor = MaterialTheme.colorScheme.onSecondaryContainer,
-//                    unselectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-//                    unselectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                ),
                 selected = currentRoute == it.route,
                 onClick = {
                     navController.navigate(it.route)

@@ -1,14 +1,7 @@
 package com.example.timetable_application.entity
 
-import androidx.room.OnConflictStrategy
-import androidx.room.Update
 import com.example.timetable_application.db.TimetableDatabase
 import kotlinx.coroutines.flow.first
-
-// 定义一个接口，表示获取课表的功能
-interface TimetableRepository {
-    suspend fun getTimetable(): Timetable
-}
 
 // 实现这个接口，使用数据库查询获取课表
 class DatabaseTimetableRepository(private val db: TimetableDatabase) {

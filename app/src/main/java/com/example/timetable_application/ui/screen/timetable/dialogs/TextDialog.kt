@@ -66,7 +66,6 @@ fun TextDialog(
                             },
                             modifier = Modifier.fillMaxWidth(),
                             colors= TextFieldDefaults.textFieldColors(
-                                textColor = MaterialTheme.colorScheme.onSecondaryContainer,
                                 containerColor = MaterialTheme.colorScheme.inversePrimary
                             )
                         )

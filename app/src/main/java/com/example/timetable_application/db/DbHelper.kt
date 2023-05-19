@@ -9,7 +9,7 @@ object DbHelper{
         val courseTime2 = CourseTime(3, listOf(1,2),listOf(1, 2, 3,4,5,6,7,8),"金旭亮", "良乡校区综教A504")
         val course1 = Course("Android技术开发基础", "E35E69", mutableListOf(courseTime1,courseTime2))
         val courseMap = mutableMapOf("Android技术开发基础" to course1)
-        val timetable = Timetable("我的课表", "2023-02-20", 1, 20, 20, courseMap)
+        val timetable = Timetable("我的课表", "2023-02-20", 1, 15, 20, courseMap)
         return timetable
     }
 
@@ -20,7 +20,7 @@ object DbHelper{
     }
     fun creatExampleCourse(): Course {
         val courseTime1 = CourseTime(1, listOf(1, 2, 3), listOf(1, 2))
-        return Course("", TemplateColors().colorList.random().substring(1), mutableListOf(courseTime1))
+        return Course("", TemplateColors.colorList.random().substring(1), mutableListOf(courseTime1))
     }
     fun creatTimeSchedule(): MutableList<OneClassTime> {
         val times = mutableListOf(

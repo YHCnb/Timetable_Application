@@ -1,6 +1,5 @@
 package com.example.timetable_application.ui.screen.timetable
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -29,7 +28,6 @@ import com.example.timetable_application.ui.screen.timetable.dialogs.MyAlertDial
 import com.example.timetable_application.ui.screen.timetable.dialogs.TextDialog
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimeTableManagement(navController: NavController, vm: TimetableViewModel){
     val timetableList by vm.timetableList.observeAsState()
@@ -60,7 +58,6 @@ fun TimeTableManagement(navController: NavController, vm: TimetableViewModel){
                 }){
                 Icon(Icons.Filled.Add, contentDescription = null)
             } } ,
-//        floatingActionButtonPosition = FabPosition.End,
     ) {paddingValues->
         LazyColumn(
             modifier = Modifier
@@ -160,7 +157,6 @@ fun TimetableCards(navController: NavController, timetableList: List<Timetable>,
                         },
                         onLongClick = { onDelete(timetable.name) }
                     ),
-//                border = BorderStroke(1.dp, Color.Green),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
             ) {
                 Text(

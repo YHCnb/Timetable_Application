@@ -1,32 +1,23 @@
 package com.example.timetable_application.ui.screen.timetable.pickers
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.substring
 import androidx.compose.ui.unit.dp
 import com.example.timetable_application.R
 import com.example.timetable_application.entity.TemplateColors
 import com.github.skydoves.colorpicker.compose.*
 import com.maxkeppeker.sheets.core.models.base.UseCaseState
-import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.color.ColorDialog
 import com.maxkeppeler.sheets.color.models.ColorConfig
 import com.maxkeppeler.sheets.color.models.ColorSelection
 import com.maxkeppeler.sheets.color.models.ColorSelectionMode
 import com.maxkeppeler.sheets.color.models.MultipleColors
-import kotlinx.coroutines.launch
-import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,6 +78,6 @@ fun ColorPicker(
 //备选颜色
 fun templateColors(): MultipleColors.ColorsHex {
     return MultipleColors.ColorsHex(
-        TemplateColors().colorList
+        TemplateColors.colorList
     )
 }

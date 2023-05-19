@@ -2,7 +2,6 @@ package com.example.timetable_application.ui.screen.timetable.timetableScreen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -22,13 +21,12 @@ import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import kotlinx.coroutines.launch
-import java.sql.Time
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun TimetableScreen(navController: NavController,vm: TimetableViewModel) {
@@ -49,12 +47,14 @@ fun TimetableScreen(navController: NavController,vm: TimetableViewModel) {
     //将livedata转换为compose可以观察的状态
     val timetableName by vm.timetableName.observeAsState()
     val startTime by vm.startTime.observeAsState()
-    val curWeek by vm.curWeek.observeAsState()
     val coursesPerDay by vm.coursesPerDay.observeAsState()
     val weeksOfTerm by vm.weeksOfTerm.observeAsState()
     val courseMap by vm.courseMap.observeAsState()
-
-    val currentWeek = rememberPagerState(initialPage = curWeek!!)
+    val curWeek by vm.curWeek.observeAsState()
+    val currentWeek = rememberPagerState(initialPage = curWeek!!-1)
+    LaunchedEffect(vm.curWeek) {
+        currentWeek.scrollToPage(vm.curWeek.value!!-1)
+    }
     val weekDays = listOf("一", "二", "三", "四", "五", "六", "日")
     val dates = generateWeekDates(startDate = LocalDate.parse(startTime), weeksOfTerm = 25)
     //用于Drawer
@@ -160,7 +160,12 @@ fun TimetableScreen(navController: NavController,vm: TimetableViewModel) {
                             drawerState.close()
                         }
                     },
-                    onConfirm = { vm.editCurWeek(it) }
+                    onConfirm = {
+                        scope.launch{
+                            currentWeek.scrollToPage(it-1)
+                        }
+                        vm.editCurWeek(it)
+                    }
                 ) {
                     scope.launch {//点击即可关闭
                         drawerState.open()
@@ -192,12 +197,32 @@ fun TimetableScreen(navController: NavController,vm: TimetableViewModel) {
                         drawerState.open()
                     }
                 }
+                Spacer(modifier = Modifier.weight(1f))
+                Divider(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    thickness = 2.dp,
+                )
+                NavigationDrawerItem(
+                    label = {
+                        Text(
+                            text = "关于",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    },
+                    selected = false,
+                    onClick = {
+                        scope.launch {//点击即可关闭
+                            drawerState.close()
+                        }
+                        navController.navigate("About")
+                    }
+                )
             }
         }
     ) {
         Scaffold(
             topBar = {
-                TimetableTopAppBar(navController=navController, vm = vm, courseMap=courseMap!!,
+                TimetableTopAppBar(navController=navController, vm = vm, courseMap=courseMap!!,currentWeek = currentWeek.currentPage,
                     onCallSettings = {
                         scope.launch {
                             drawerState.open()
@@ -210,6 +235,7 @@ fun TimetableScreen(navController: NavController,vm: TimetableViewModel) {
             Column(
                 modifier = Modifier.padding(it)
             ) {
+                // 每周课表
                 HorizontalPager(
                     modifier = Modifier.fillMaxWidth(),
                     state = currentWeek,
