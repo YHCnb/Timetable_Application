@@ -103,8 +103,14 @@ fun CourseManagement(navController: NavController,vm: TimetableViewModel){
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CoursesCards(navController: NavController, courseMap: MutableCollection<Course>, onDelete: (String) -> Unit){
-    val courseList = courseMap.toList()
-    val chunkedList = courseList.chunked(2)
+    var courseList = courseMap.toList()
+    var chunkedList = courseList.chunked(2)
+    LaunchedEffect(courseMap){
+        courseList = courseMap.toList()
+    }
+    LaunchedEffect(courseMap){
+        chunkedList = courseMap.toList().chunked(2)
+    }
 
     chunkedList.forEach{ chunk->
         Row(
