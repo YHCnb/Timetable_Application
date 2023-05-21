@@ -153,7 +153,7 @@ fun Navigation(navController: NavHostController,
                 type = NavType.StringType
             })
         ){NavBackStackEntry->
-            val courseName = NavBackStackEntry.arguments?.getString("cuorseName")
+            val courseName = NavBackStackEntry.arguments?.getString("courseName")
             if(courseName=="_"){
                 CourseEditor(navController = navController, weeksOfTerm = vm.weeksOfTerm.value!! ,
                     coursesPerDay = vm.coursesPerDay.value!!,course = DbHelper.creatExampleCourse())
