@@ -11,6 +11,8 @@ import org.jsoup.Jsoup
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+//此思路由范大神提供，大神的网站请看--->https://github.com/flwfdd/BIT101/tree/main
+
 private suspend fun encryptPassword(password: String, salt: String): String? {
     return withContext(Dispatchers.Main) {
         return@withContext suspendCoroutine { it ->

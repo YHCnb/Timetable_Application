@@ -205,7 +205,7 @@ fun TimetableScreen(navController: NavController,vm: TimetableViewModel) {
                 NavigationDrawerItem(
                     label = {
                         Text(
-                            text = "关于",
+                            text = "关于 | About",
                             style = MaterialTheme.typography.titleMedium
                         )
                     },

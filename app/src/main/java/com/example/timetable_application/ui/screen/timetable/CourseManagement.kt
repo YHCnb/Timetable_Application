@@ -138,6 +138,7 @@ fun CoursesCards(navController: NavController, courseMap: MutableCollection<Cour
                     ) {
                         Text(
                             text = course.name,
+                            color = Color.White,
                             fontWeight = FontWeight.Normal,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.padding(20.dp),

@@ -9,7 +9,7 @@ import okhttp3.Request
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
+//此思路由范大神提供，大神的网站请看--->https://github.com/flwfdd/BIT101/tree/main
 private data class NowTermResponseRoot(
     var datas: NowTermResponseDatas
 )
@@ -23,7 +23,7 @@ private data class NowTermResponseDqxnxq(
 )
 
 data class TermResponseItem(
-    var DM: String, // 学年学期代码
+    var DM: String,
 )
 
 private data class DateResponseRoot(
@@ -31,8 +31,8 @@ private data class DateResponseRoot(
 )
 
 private data class DateResponseItem(
-    var XQ: Int, // 星期
-    var RQ: String, // 日期
+    var XQ: Int,
+    var RQ: String,
 )
 
 private data class CourseResponseRoot(
@@ -77,19 +77,16 @@ suspend fun getCourseSchedule(): CourseScheduleResponse? {
     try {
         return withContext(Dispatchers.IO) {
             val client = HttpClient.client
-            // 鉴权初始化
             val initRequest = Request.Builder()
                 .url(schedule_init_url)
                 .build()
             client.newCall(initRequest).execute().close()
 
-            // 语言初始化
             val langRequest = Request.Builder()
                 .url(schedule_lang_url)
                 .build()
             client.newCall(langRequest).execute().close()
 
-            // 获取学期
             val termRequest = Request.Builder()
                 .url(schedule_now_term_url)
                 .build()
@@ -99,7 +96,6 @@ suspend fun getCourseSchedule(): CourseScheduleResponse? {
                 term = res.datas.dqxnxq.rows[0].DM
             }
 
-            // 获取学期开始日期
             var firstDay: LocalDate? = null
             val dateBody = FormBody.Builder()
                 .add("requestParamStr", "{\"XNXQDM\":\"$term\",\"ZC\":\"1\"}")
@@ -122,7 +118,6 @@ suspend fun getCourseSchedule(): CourseScheduleResponse? {
                 return@withContext null
             }
 
-            // 获取课程表
             val body = FormBody.Builder()
                 .add("XNXQDM", term)
                 .build()
