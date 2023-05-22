@@ -11,7 +11,7 @@ Github
 
 不过我也发现了两款十分优秀的APP，“超级课程表”和“WakeUp课程表”，这两款课表都做到了对大部分学校教务系统的适配支持。但当我在“超级课程表”尝试导入北京理工大学课表时，发现会转到一个我们学生平时都不会使用的“智慧北理”页面，打开课表将会发现页面不兼容，根本导入无法咱学校的课表（悲）。
 
-                                                       ![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/05e4e406-b471-4efd-985b-6d517f795c13)
+![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/05e4e406-b471-4efd-985b-6d517f795c13)
 
 如此一番调研下来，我惊讶的发现，能够为我们北理工学生方便使用的课程表APP市面上可谓是凤毛麟角（强烈推荐“WakeUp课程表”！！！）。这就体现了个人开发APP的一个优势，只需要完成对咱自己的学校教务系统进行适配即可。但即便如此，在实际对学校网站进行信息抓取操作中，仍困难重重。这里要特别感谢同届的范大佬的无私帮助，大佬探索并总结了对学校官网API进行访问与信息获取的一整套流程，并应用在其主导开发的网站BIT101中（在此向大佬膜拜Orz）。
 
@@ -21,7 +21,7 @@ Github
 logo
 最后再扯一下应用的logo，一个有趣的事实是，这个logo从想法到图片都是由New Bing产生的。提问：“提到课表，你会想到什么动物”，回答：“我会想到一只猫，因为他们很喜欢按照自己的规律生活，不收别人的约束。而且，猫咪也很聪明，会找到自己感兴趣的事情去做。”于是我就让它帮我设计一个猫咪logo，不久就得到了满意的图片，便有了咱APP的logo，算是一段十分有趣的体验。
 
-                                                      ![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/d6eee131-53db-47f7-9383-e57d557af1e5)
+![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/d6eee131-53db-47f7-9383-e57d557af1e5)
 
 
 
@@ -70,7 +70,7 @@ logo
 主页呈现的就是课程表本身，初始化界面显示的是当前周的课表，你可以轻松地通过左右滑动切换到其他周的课表。可以通过点击查看对应课程的详细信息卡片，卡片中的编辑按钮将跳转到对应课程的信息管理页面。
 主页面的上方显示当前日期与页面对应周数，如为课程表当前周将会显示“（本周）”字样。右上角三个按钮分别对应：添加课程、导入课程、设置栏。以下将会分别介绍。
 
-                                                          ![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/3685553b-c2d4-4f2b-a875-8bc5f00c09ab)
+![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/3685553b-c2d4-4f2b-a875-8bc5f00c09ab)
 
 
 
@@ -86,37 +86,37 @@ logo
 基本设置主要是对当前课表的一些变量进行快捷地调整，可以设置学期开始时间、当前周、课程节数、学期周数。值得一提的是，在对应的选择框显示的同时，设置栏将会收起，而当用户取消或者dismiss时，设置栏又会自动打开，从而保证良好的用户体验。
 关于将跳转到关于页面，可以看到应用信息以及我对应用的一些想法。
 
-                                                            ![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/d34e7128-d316-4bc7-8efc-787b9d9a66e4)
+![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/d34e7128-d316-4bc7-8efc-787b9d9a66e4)
 
 添加课程|课程编辑
 这个页面既可以用于添加新课程，也可以用于编辑已有课程的信息。可以编辑课程名字，对应卡片颜色，其中颜色支持RGB调节，也可从预置的备选颜色中选择。下方为课程上课的时间段，每个时间段都包括周数、上课时间、老师、上课地点4个属性。你可以通过屏幕右下角按钮添加时间段，时间段右上角按钮删除对应时间段。
 
-                                                          ![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/0adbf6a7-850b-48bd-bebf-feee8007c8c9)
+![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/0adbf6a7-850b-48bd-bebf-feee8007c8c9)
 
 课程管理
 呈现课表中所有的课程，点击对应的卡片即可进入对应的课程编辑页面，长按对应卡片将会删除对应课程。右下角按钮点击可以添加新的课程。
 
-                                                          ![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/929e5d2b-28f0-4a99-909a-9b63926ae753)
+![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/929e5d2b-28f0-4a99-909a-9b63926ae753)
 
 
 课表管理
 呈现现有的所有的课表，点击对应的卡片即可进入对应的课表管理页面，长按对应卡片将会删除对应课表（默认课表无法删除）。右下角按钮点击可以添加新的课表。
 课表卡片右下角有两个按钮，第一个爱心为设置默认课表，默认课表的爱心将是实心的；第二个按钮将进入课表数据页面，可以在此对课表基本信息进行编辑。
 
-                                                          ![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/0ce97da9-1b96-42dd-8625-686475f0e954) ![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/a396a81c-0c81-4001-b892-9d5acc8b95f1)
+![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/0ce97da9-1b96-42dd-8625-686475f0e954) ![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/a396a81c-0c81-4001-b892-9d5acc8b95f1)
          
 课表导入
 课表导入目前支持两种形式：BIT导入与ICS导入。其中BIT导入将通过登陆学校统一身份认证，获取当前学期的课表；ICS导入目前只支持解析BIT101.cn（范大神的网站）中导出的.ics格式文件。
 在BIT导入页面，仅需输入正确的学号与密码，即可一键获取当前学期的课表。正确登陆后一段时间内无需再次登录，可直接获取课表，也可选择退出登陆。
 
-                                                          ![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/71ea35b2-c3b0-409f-8ded-dea65d8045f8)  ![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/245c7ead-f610-4c5e-8abb-cab5f0c09918)
+![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/71ea35b2-c3b0-409f-8ded-dea65d8045f8)  ![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/245c7ead-f610-4c5e-8abb-cab5f0c09918)
 
 
           
 关于|About
 呈现一些想法与相关链接。
 
-                                                          ![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/f77fd1e7-9e9d-428b-8d62-32c555673d8e)
+![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/f77fd1e7-9e9d-428b-8d62-32c555673d8e)
 
 4. 架构设计与技术实现
 整体架构
@@ -183,11 +183,11 @@ Material3迁移
 
 第一个就是在进行课表导入的时候，对于新同名覆盖的课表，导航将不会进行changeTimetable操作（用于将数据更新为当前默认课表），导致显示的还是原课表数据。就算执行change操作也会因为并没有执行完就已经转到对应编辑页面而显示错误。最终使用runBlocknig通过阻塞保证UI显示正确，虽然牺牲了一点性能，但最后应用起来很丝滑，并没有卡顿的感觉。
 
-                                                      ![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/32bed896-f332-4b31-8e65-99fd975eb8a6)
+![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/32bed896-f332-4b31-8e65-99fd975eb8a6)
 
 第二个是主页显示的周数可能不正确。在切换默认课表或者导入全新课表后，主页显示的周数将仍是上个课表的周数（虽然课表内容改变了，但是周数没对应上了，不是当前周）。这是由于对与课表不同周数的滑动，是通过rememberPagerState这个特殊的状态进行控制。而这个值只会初始化一次，并不会因为vm中curweek的改变而改变。于是我通过LaunchedEffect将currenWeek与curWeek绑定起来，每次curWeek改变currenWeek就需要滑动到对应周的页面，完成UI的正确显示。
 
-                                                      ![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/f9443bfe-c77a-4b82-8490-043c38d278f9)
+![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/f9443bfe-c77a-4b82-8490-043c38d278f9)
 
 
 解析错误
@@ -199,7 +199,7 @@ Material3迁移
 failed lock verification
 这提示其实就是compose相关的依赖版本没及时更新，更新为最新版本即可。
 
-                                                          ![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/fae8458a-1c50-4d05-942d-b554329dca76)
+![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/fae8458a-1c50-4d05-942d-b554329dca76)
 
 
 数据库版本迁移
