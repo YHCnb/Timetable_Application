@@ -1,5 +1,6 @@
 # Timetable_Application
-![image](https://github.com/YHCnb/Timetable_Application/assets/112797916/d6eee131-53db-47f7-9383-e57d557af1e5)
+<img src="https://github.com/YHCnb/Timetable_Application/assets/112797916/d6eee131-53db-47f7-9383-e57d557af1e5" width="150px">
+
 一款简单的课程表Android软件，轻松实现课程管理
 
 有什么优势？ 
